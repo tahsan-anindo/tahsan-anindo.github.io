@@ -86,7 +86,7 @@
       .hero{ position:relative; padding:52px 0 0; text-align:center; overflow:hidden;
         background:radial-gradient(900px 520px at 50% -12%, rgba(43,92,230,.40), transparent 62%), radial-gradient(700px 420px at -10% 40%, rgba(217,166,46,.12), transparent 55%), radial-gradient(700px 420px at 110% 40%, rgba(217,166,46,.09), transparent 55%), var(--bg); }
       .hero-bg{ position:absolute; top:-6%; bottom:auto; right:0; left:auto; width:min(62%, 880px); height:780px; z-index:0; pointer-events:none; opacity:.16;
-        background:url("assets/img01.jpg") center 22% / cover no-repeat;
+        background:url("assets/img001.jpg") center 22% / cover no-repeat;
         -webkit-mask-image:linear-gradient(90deg, transparent 0%, #000 42%), linear-gradient(180deg, #000 0%, transparent 92%);
         -webkit-mask-composite:source-in; mask-image:linear-gradient(90deg, transparent 0%, #000 42%), linear-gradient(180deg, #000 0%, transparent 92%);
         mask-composite:intersect;
@@ -261,8 +261,9 @@
       .about-based strong{ font-size:var(--fs-md); color:var(--ink); }
       .about-based strong .flag{ font-size:1.12em; line-height:1; }
       .flag-list{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-      .flag-item{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:7px 14px; font-size:var(--fs-sm); font-weight:700; color:var(--ink); transition:transform .3s var(--ease-spring), border-color .25s; cursor:default; }
+      .flag-item{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:7px 14px; font:inherit; font-size:var(--fs-sm); font-weight:700; color:var(--ink); transition:transform .3s var(--ease-spring), border-color .25s; cursor:pointer; }
       .flag-item:hover{ transform:translateY(-2px); border-color:var(--gold); }
+      .flag-item:active{ transform:scale(.96); }
       .flag-item .flag{ font-size:1.05rem; line-height:1; }
       .flag-item small{ color:var(--muted); font-weight:500; font-size:var(--fs-xs); }
 
@@ -305,6 +306,37 @@
       .folder-empty p{ margin:0; font-size:var(--fs-md); }
       .folder-empty p b{ color:var(--gold-light); }
       .folder-empty .folder-empty-sub{ color:var(--muted); font-size:var(--fs-sm); margin-top:7px; }
+      /* Brand sections inside the PR folder — each brand keeps its own photos */
+      .brand-section{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:24px; margin-bottom:20px; }
+      .brand-section[hidden]{ display:none; }
+      .brand-head{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
+      .brand-title{ font-size:var(--fs-lg); font-weight:800; line-height:1.2; margin:0; }
+      .brand-title::after{ content:""; display:block; width:64px; height:2px; margin-top:8px; border-radius:99px; background:linear-gradient(90deg, var(--gold), rgba(217,166,46,0)); }
+      .brand-meta{ font-size:var(--fs-sm); color:var(--muted); }
+      .brand-gallery{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start; }
+      /* Nested folders — the PR folder holds brand folders (e.g. Skino) inside it */
+      .subfolder-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+      .subfolder-grid[hidden], .subfolder-view[hidden]{ display:none; }
+      @media (min-width:1024px){ .subfolder-grid{ grid-template-columns:repeat(4,1fr); gap:18px; } }
+      @media (max-width:860px){ .subfolder-grid{ grid-template-columns:repeat(2,1fr); } }
+      /* PR brand galleries — every photo shows full-frame at its own original
+         portrait ratio, never cropped into a landscape box */
+      .brand-section .brand-gallery .g-item img{ height:auto; aspect-ratio:auto; object-fit:contain; }
+      /* Vietnam folder — every photo shows full-frame at its own original
+         ratio, never cropped into a landscape or portrait box */
+      .gallery .g-item[data-folder="vietnam"] img{ height:auto; aspect-ratio:auto; object-fit:contain; }
+      /* Thailand folder — every photo shows full-frame at its own original
+         ratio, never cropped into a landscape or portrait box */
+      .gallery .g-item[data-folder="thailand"] img{ height:auto; aspect-ratio:auto; object-fit:contain; }
+      /* Indonesia & Singapore folders — same full-frame, original-ratio rule */
+      .gallery .g-item[data-folder="indonesia"] img, .gallery .g-item[data-folder="singapore"] img, .gallery .g-item[data-folder="malaysia"] img{ height:auto; aspect-ratio:auto; object-fit:contain; }
+      /* Dubai, UAE folder — same full-frame, original-ratio rule */
+      .gallery .g-item[data-folder="uae"] img{ height:auto; aspect-ratio:auto; object-fit:contain; }
+      /* China folder — same full-frame, original-ratio rule */
+      .gallery .g-item[data-folder="china"] img{ height:auto; aspect-ratio:auto; object-fit:contain; }
+      /* Portrait folder covers — the cover box follows the photo's own portrait ratio */
+      .folder-card.portrait{ aspect-ratio:3/4; min-height:0; align-self:start; }
+      @media (max-width:860px){ .brand-gallery{ grid-template-columns:repeat(2,1fr); } .brand-section{ padding:18px; } }
       @media (max-width:860px){ .folder-grid{ grid-template-columns:repeat(2,1fr); } .folder-card.top{ grid-column:span 2; } }
       @media (max-width:520px){ .folder-card{ min-height:160px; } .folder-card.empty{ min-height:160px; } .folder-info b{ font-size:var(--fs-base); } .folder-info span{ font-size:var(--fs-xs); } }
       .gallery{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start; }
@@ -593,8 +625,8 @@
           <b>Tahsan <i>Anindo</i><small>UGC Portfolio</small></b>
         </a>
         <div class="nav-links" aria-label="Main navigation">
+          <a class="bubble-host" href="#content" id="navPr">PR</a>
           <a class="bubble-host" href="#content">Content</a>
-          <a class="bubble-host" href="#top">Home</a>
           <a class="bubble-host" href="#about">About</a>
         </div>
 
@@ -611,7 +643,7 @@
         <div class="hero-portrait" id="heroPortrait">
           <span class="hero-glow" aria-hidden="true"></span>
           <figure class="hero-frame">
-            <img src="assets/img02.jpg" alt="Tahsan Anindo in a black suit and white shirt with a blue-dial watch, standing against a black and gold textured wall — the cover portrait" />
+            <img src="assets/img001.jpg" alt="Tahsan Anindo in a black suit and white shirt with a blue-dial watch, standing against a black and gold textured wall — the cover portrait" />
           </figure>
           <span class="hero-exp-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -646,14 +678,14 @@
         <div class="hero-countries reveal in">
           <span class="hc-label">Countries Visited</span>
           <div class="flag-list">
-            <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇹🇭</span>Thailand</span>
-            <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇸🇬</span>Singapore</span>
-            <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇲🇾</span>Malaysia</span>
-            <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇮🇩</span>Indonesia</span>
-            <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇻🇳</span>Vietnam</span>
-            <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇦🇪</span>UAE</span>
-            <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇸🇦</span>Saudi Arabia</span>
-            <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇨🇳</span>China</span>
+            <button type="button" class="flag-item bubble-host" data-open-folder="thailand"><span class="flag" aria-hidden="true">🇹🇭</span>Thailand</button>
+            <button type="button" class="flag-item bubble-host" data-open-folder="singapore"><span class="flag" aria-hidden="true">🇸🇬</span>Singapore</button>
+            <button type="button" class="flag-item bubble-host" data-open-folder="malaysia"><span class="flag" aria-hidden="true">🇲🇾</span>Malaysia</button>
+            <button type="button" class="flag-item bubble-host" data-open-folder="indonesia"><span class="flag" aria-hidden="true">🇮🇩</span>Indonesia</button>
+            <button type="button" class="flag-item bubble-host" data-open-folder="vietnam"><span class="flag" aria-hidden="true">🇻🇳</span>Vietnam</button>
+            <button type="button" class="flag-item bubble-host" data-open-folder="uae"><span class="flag" aria-hidden="true">🇦🇪</span>UAE</button>
+            <button type="button" class="flag-item bubble-host" data-open-folder="saudi"><span class="flag" aria-hidden="true">🇸🇦</span>Saudi Arabia</button>
+            <button type="button" class="flag-item bubble-host" data-open-folder="china"><span class="flag" aria-hidden="true">🇨🇳</span>China</button>
           </div>
         </div>
         <div class="hero-ctas">
@@ -724,44 +756,62 @@
         </div>
         <div class="folder-grid reveal" id="folderGrid" role="group" aria-label="Photo folders by country">
           <button class="folder-card top bubble-host" data-folder="top" data-name="Top Library">
-            <img src="assets/img03.jpg" alt="Tahsan Anindo in a red t-shirt in front of the Museum of the Future in Dubai — leading the Top Library" loading="lazy" />
+            <img src="assets/img002.jpg" alt="Tahsan Anindo in a red t-shirt in front of the Museum of the Future in Dubai — leading the Top Library" loading="lazy" />
             <span class="folder-count">10 photos</span>
             <span class="folder-info"><b>★ Top Library</b><span>My best pictures, together in one place</span></span>
           </button>
-          <button class="folder-card empty bubble-host" data-folder="pr" data-name="PR">
-            <span class="folder-empty-in"><span class="flag" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#d9a62e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9"/><path d="M12 8v13"/><path d="M12 8s-4.5.2-6-1.2C4.6 5.4 5.4 3 7.5 3 10 3 12 8 12 8Z"/><path d="M12 8s4.5.2 6-1.2c1.4-1.4.6-3.8-1.5-3.8C14 3 12 8 12 8Z"/></svg></span><b>PR</b><span>PR packages &amp; brand features</span><span class="soon">Photos coming soon</span></span>
+          <button class="folder-card portrait bubble-host" data-folder="pr" data-name="PR">
+            <img src="assets/img003.jpg" alt="Two hands holding the SkinO Ultimate Glow Vitamin E Body Lotion and the SkinO Tea Tree Soothing Shower Gel together" loading="lazy" />
+            <span class="folder-count">18 photos</span>
+            <span class="folder-info"><b>PR</b><span>PR packages &amp; brand features</span></span>
           </button>
           <button class="folder-card bubble-host" data-folder="bangladesh" data-name="🇧🇩 Bangladesh">
-            <img src="assets/img04.jpg" alt="Tahsan Anindo relaxing in a white hotel bathrobe on a cream sofa in warm golden light in Bangladesh" loading="lazy" />
+            <img src="assets/img004.jpg" alt="Tahsan Anindo relaxing in a white hotel bathrobe on a cream sofa in warm golden light in Bangladesh" loading="lazy" />
             <span class="folder-count">2 photos</span>
             <span class="folder-info"><b>🇧🇩 Bangladesh</b></span>
           </button>
           <button class="folder-card bubble-host" data-folder="blazer" data-name="Blazer">
-            <img src="assets/img05.jpg" alt="Tahsan Anindo seated in a cream blazer on a white chair at a red and white floral backdrop" loading="lazy" />
+            <img src="assets/img005.jpg" alt="Tahsan Anindo seated in a cream blazer on a white chair at a red and white floral backdrop" loading="lazy" />
             <span class="folder-count">8 photos</span>
             <span class="folder-info"><b>Blazer</b><span>All my blazer photos together — cream &amp; burgundy editorials</span></span>
           </button>
+          <button class="folder-card bubble-host" data-folder="thailand" data-name="Thailand">
+            <img src="assets/img006.jpg" alt="Tahsan Anindo in a grey Le Coq Sportif T-shirt and sunglasses at a rooftop café in Pattaya, Thailand — leading the Thailand folder" loading="lazy" />
+            <span class="folder-count">45 photos</span>
+            <span class="folder-info"><b>🇹🇭 Thailand</b><span>Pattaya · Bangkok · Mini Siam</span></span>
+          </button>
+          <button class="folder-card bubble-host" data-folder="indonesia" data-name="Indonesia">
+            <img src="assets/img007.jpg" alt="Tahsan Anindo in a black T-shirt leaning on a railing, looking out over green cliffs and the sea in Bali, Indonesia — leading the Indonesia folder" loading="lazy" />
+            <span class="folder-count">2 photos</span>
+            <span class="folder-info"><b>🇮🇩 Indonesia</b><span>Bali</span></span>
+          </button>
+          <button class="folder-card bubble-host" data-folder="vietnam" data-name="Vietnam">
+            <img src="assets/img008.jpg" alt="Tahsan Anindo in a yellow T-shirt and sunglasses in front of a carved wooden door in Vietnam" loading="lazy" />
+            <span class="folder-count">47 photos</span>
+            <span class="folder-info"><b>🇻🇳 Vietnam</b><span>Ha Long Bay · Ho Chi Minh City</span></span>
+          </button>
+          <button class="folder-card bubble-host" data-folder="singapore" data-name="Singapore">
+            <img src="assets/img009.jpg" alt="Tahsan Anindo in a black T-shirt catching the Merlion's water spray, with Marina Bay Sands behind him in Singapore — leading the Singapore folder" loading="lazy" />
+            <span class="folder-count">4 photos</span>
+            <span class="folder-info"><b>🇸🇬 Singapore</b><span>Marina Bay · Merlion</span></span>
+          </button>
+          <button class="folder-card portrait bubble-host" data-folder="malaysia" data-name="Malaysia">
+            <img src="assets/img010.jpg" alt="The Petronas Twin Towers rising into a cloudy sky in Kuala Lumpur, Malaysia — leading the Malaysia folder" loading="lazy" />
+            <span class="folder-count">3 photos</span>
+            <span class="folder-info"><b>🇲🇾 Malaysia</b><span>Kuala Lumpur · Batu Caves</span></span>
+          </button>
+          <button class="folder-card portrait bubble-host" data-folder="uae" data-name="Dubai, UAE">
+            <img src="assets/img011.jpg" alt="Tahsan Anindo in a red t-shirt and sunglasses leaning on a stone railing with the Burj Khalifa rising behind him in Dubai — leading the Dubai, UAE folder" loading="lazy" />
+            <span class="folder-count">84 photos</span>
+            <span class="folder-info"><b>🇦🇪 Dubai, UAE</b><span>Burj Khalifa · Miracle Garden · Sheikh Zayed Mosque · Dubai Marina</span></span>
+          </button>
+          <button class="folder-card empty bubble-host" data-folder="saudi" data-name="🇸🇦 Saudi Arabia">
+            <span class="folder-empty-in"><span class="flag" aria-hidden="true">🇸🇦</span><b>Saudi Arabia</b><span class="soon">Photos coming soon</span></span>
+          </button>
           <button class="folder-card bubble-host" data-folder="china" data-name="China">
-            <img src="assets/img06.jpg" alt="Tahsan Anindo with arms open standing on the Great Wall of China with green mountains behind" loading="lazy" />
-            <span class="folder-count">33 photos</span>
-            <span class="folder-info"><b>🇨🇳 China</b><span>Beijing · Great Wall · Luoyang · Baoquan · Chongqing · Shenzhen</span></span>
-          </button>
-          <button class="folder-card bubble-host" data-folder="uae" data-name="Dubai, UAE">
-            <img src="assets/img07.jpg" alt="Tahsan Anindo in sunglasses in front of the Burj Khalifa and Dubai Fountain lake at sunset" loading="lazy" />
-            <span class="folder-count">7 photos</span>
-            <span class="folder-info"><b>🇦🇪 Dubai, UAE</b><span>Burj Khalifa · Dubai Marina · Museum of the Future</span></span>
-          </button>
-          <button class="folder-card empty bubble-host" data-folder="thailand" data-name="Thailand">
-            <span class="folder-empty-in"><span class="flag" aria-hidden="true">🇹🇭</span><b>Thailand</b><span>Folder ready for the Thailand set</span><span class="soon">Photos coming soon</span></span>
-          </button>
-          <button class="folder-card empty bubble-host" data-folder="vietnam" data-name="Vietnam">
-            <span class="folder-empty-in"><span class="flag" aria-hidden="true">🇻🇳</span><b>Vietnam</b><span>Folder ready for the Vietnam set</span><span class="soon">Photos coming soon</span></span>
-          </button>
-          <button class="folder-card empty bubble-host" data-folder="indonesia" data-name="Indonesia">
-            <span class="folder-empty-in"><span class="flag" aria-hidden="true">🇮🇩</span><b>Indonesia</b><span>Folder ready for the Indonesia set</span><span class="soon">Photos coming soon</span></span>
-          </button>
-          <button class="folder-card empty bubble-host" data-folder="malaysia" data-name="Malaysia">
-            <span class="folder-empty-in"><span class="flag" aria-hidden="true">🇲🇾</span><b>Malaysia</b><span>Folder ready for the Malaysia set</span><span class="soon">Photos coming soon</span></span>
+            <img src="assets/img012.jpg" alt="Tahsan Anindo with arms open standing on the Great Wall of China with green mountains behind" loading="lazy" />
+            <span class="folder-count">98 photos</span>
+            <span class="folder-info"><b>🇨🇳 China</b><span>Beijing · Great Wall · Luoyang · Zhengzhou · Baoquan · Chongqing · Shenzhen</span></span>
           </button>
         </div>
         <div class="folder-view" id="folderView" hidden>
@@ -773,246 +823,1349 @@
             <p><b id="folderEmptyName">This folder</b> has no photos yet.</p>
             <p class="folder-empty-sub">The folder is ready — photos from this country will appear here soon.</p>
           </div>
+          <div class="subfolder-grid" id="prSubfolders" hidden>
+            <button class="folder-card portrait bubble-host" id="skinoFolderCard" type="button" data-name="Skino">
+              <img src="assets/img003.jpg" alt="Two hands holding the SkinO Ultimate Glow Vitamin E Body Lotion and the SkinO Tea Tree Soothing Shower Gel together" loading="lazy" />
+              <span class="folder-count">4 photos</span>
+              <span class="folder-info"><b>Skino</b><span>PR feature — product photos</span></span>
+            </button>
+            <button class="folder-card portrait bubble-host" id="skino2FolderCard" type="button" data-name="Skino Part 2" style="aspect-ratio:1290/2256">
+              <img src="assets/img013.jpg" alt="Skino Part 2 review poster — the SkinO Deep Ocean Mineral Shower Gel and Argan Oil bottles under the words The 2-Week Test Skincare Review" loading="lazy" />
+              <span class="folder-count">5 photos</span>
+              <span class="folder-info"><b>Skino Part 2</b><span>PR feature — Deep Ocean &amp; Argan Oil</span></span>
+            </button>
+            <button class="folder-card portrait bubble-host" id="ebyFolderCard" type="button" data-name="Earth Beauty & You" style="aspect-ratio:1290/2210">
+              <img src="assets/img014.jpg" alt="A hand holding the navy Earth Beauty & You shopping bag under the words The Unboxing" loading="lazy" />
+              <span class="folder-count">9 photos</span>
+              <span class="folder-info"><b>Earth Beauty &amp; You</b><span>PR feature — Charcoal Detox Face Wash</span></span>
+            </button>
+          </div>
+          <div class="subfolder-view" id="skinoView" hidden>
+            <div class="folder-head">
+              <button class="folder-back bubble-host" id="skinoBack" type="button">← Back to PR</button>
+              <div class="folder-head-txt"><h3>Skino</h3><span>4 photos</span></div>
+            </div>
+          <section class="brand-section" data-brand-folder="pr" hidden aria-label="Skino PR feature">
+            <div class="brand-head">
+              <h4 class="brand-title">Skino</h4>
+              <span class="brand-meta">4 photos</span>
+            </div>
+            <div class="brand-gallery">
+              <button class="g-item bubble-host full" data-folder="pr" data-title="The Skino Pair — Lotion &amp; Shower Gel" data-sub="Skino · PR">
+                <img src="assets/img003.jpg" alt="Two hands holding the SkinO Ultimate Glow Vitamin E Body Lotion and the SkinO Tea Tree Soothing Shower Gel together" loading="lazy" />
+                <span class="g-cap"><span>Skino</span><b>The Skino Pair, Held Together</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="pr" data-title="PR Products — The Skino Package" data-sub="Skino · PR">
+                <img src="assets/img015.jpg" alt="Skino PR products — the Vitamin E body lotion and Tea Tree shower gel bottles lit by colourful fairy lights" loading="lazy" />
+                <span class="g-cap"><span>Skino</span><b>PR Products, The Skino Package</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="pr" data-title="Ultimate Glow Vitamin E Body Lotion" data-sub="Skino · PR">
+                <img src="assets/img016.jpg" alt="A hand holding the SkinO Ultimate Glow Vitamin E Body Lotion bottle on a balcony" loading="lazy" />
+                <span class="g-cap"><span>Skino</span><b>Ultimate Glow Vitamin E Body Lotion</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="pr" data-title="Tea Tree Soothing Shower Gel" data-sub="Skino · PR">
+                <img src="assets/img017.jpg" alt="A hand holding the SkinO Tea Tree Soothing Shower Gel bottle on a balcony" loading="lazy" />
+                <span class="g-cap"><span>Skino</span><b>Tea Tree Soothing Shower Gel</b></span>
+              </button>
+            </div>
+          </section>
+          </div>
+          <div class="subfolder-view" id="skino2View" hidden>
+            <div class="folder-head">
+              <button class="folder-back bubble-host" id="skino2Back" type="button">← Back to PR</button>
+              <div class="folder-head-txt"><h3>Skino Part 2</h3><span>5 photos</span></div>
+            </div>
+          <section class="brand-section" data-brand-folder="pr2" hidden aria-label="Skino Part 2 PR feature">
+            <div class="brand-head">
+              <h4 class="brand-title">Skino Part 2</h4>
+              <span class="brand-meta">5 photos · Deep Ocean &amp; Argan Oil</span>
+            </div>
+            <div class="brand-gallery">
+              <button class="g-item bubble-host full" data-folder="pr2" data-title="The 2-Week Test — Skincare Review Poster" data-sub="Skino Part 2 · PR">
+                <img src="assets/img013.jpg" alt="Skino Part 2 review poster — the SkinO Deep Ocean Mineral Shower Gel and Argan Oil bottles under the words The 2-Week Test Skincare Review" loading="lazy" />
+                <span class="g-cap"><span>Skino Part 2</span><b>The 2-Week Test, Review Poster</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="pr2" data-title="Argan Oil &amp; Deep Ocean — Held Together" data-sub="Skino Part 2 · PR">
+                <img src="assets/img018.jpg" alt="Two hands holding the SkinO Argan Oil bottle and the SkinO Deep Ocean Mineral Shower Gel bottle against a wooden background" loading="lazy" />
+                <span class="g-cap"><span>Skino Part 2</span><b>Argan Oil &amp; Deep Ocean, Held Together</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="pr2" data-title="Argan Oil — Enriched with Vitamin E" data-sub="Skino Part 2 · PR">
+                <img src="assets/img019.jpg" alt="A hand holding the SkinO Argan Oil bottle against a warm golden background" loading="lazy" />
+                <span class="g-cap"><span>Skino Part 2</span><b>Argan Oil, Enriched with Vitamin E</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="pr2" data-title="Deep Ocean Shower Gel — The Lather Test" data-sub="Skino Part 2 · PR">
+                <img src="assets/img020.jpg" alt="Foam-covered gloved hands giving a thumbs up while holding the SkinO Deep Ocean Mineral Shower Gel bottle in a shower" loading="lazy" />
+                <span class="g-cap"><span>Skino Part 2</span><b>Deep Ocean Shower Gel, The Lather Test</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="pr2" data-title="Deep Ocean &amp; Argan Oil — The Pair" data-sub="Skino Part 2 · PR">
+                <img src="assets/img021.jpg" alt="Two hands holding the SkinO Deep Ocean Mineral Shower Gel and the SkinO Argan Oil bottles against a wooden background" loading="lazy" />
+                <span class="g-cap"><span>Skino Part 2</span><b>Deep Ocean &amp; Argan Oil, The Pair</b></span>
+              </button>
+            </div>
+          </section>
+          </div>
+          <div class="subfolder-view" id="ebyView" hidden>
+            <div class="folder-head">
+              <button class="folder-back bubble-host" id="ebyBack" type="button">← Back to PR</button>
+              <div class="folder-head-txt"><h3>Earth Beauty &amp; You</h3><span>9 photos</span></div>
+            </div>
+          <section class="brand-section" data-brand-folder="eby" hidden aria-label="Earth Beauty and You PR feature">
+            <div class="brand-head">
+              <h4 class="brand-title">Earth Beauty &amp; You</h4>
+              <span class="brand-meta">9 photos · Charcoal Detox Face Wash</span>
+            </div>
+            <div class="brand-gallery">
+              <button class="g-item bubble-host full" data-folder="eby" data-title="The Unboxing — The Earth Beauty Bag" data-sub="Earth Beauty &amp; You · PR">
+                <img src="assets/img014.jpg" alt="A hand holding the navy Earth Beauty & You shopping bag under the words The Unboxing" loading="lazy" />
+                <span class="g-cap"><span>Earth Beauty &amp; You</span><b>The Unboxing, The Earth Beauty Bag</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="eby" data-title="Charcoal Detox Face Wash — Close-Up" data-sub="Earth Beauty &amp; You · PR">
+                <img src="assets/img022.jpg" alt="Close-up of the Earth Beauty & You Anti-Pollution Charcoal Detox Face Wash tube standing on grey fur" loading="lazy" />
+                <span class="g-cap"><span>Earth Beauty &amp; You</span><b>Charcoal Detox Face Wash, Close-Up</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="eby" data-title="Charcoal Detox Face Wash — The Title Card" data-sub="Earth Beauty &amp; You · PR">
+                <img src="assets/img023.jpg" alt="The Earth Beauty & You Charcoal Detox Face Wash tube on fur under the text Earth Beauty and You Anti-Pollution Charcoal Detox Face Wash" loading="lazy" />
+                <span class="g-cap"><span>Earth Beauty &amp; You</span><b>Charcoal Detox, The Title Card</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="eby" data-title="Mirror Selfie — Thumbs Up" data-sub="Earth Beauty &amp; You · PR">
+                <img src="assets/img024.jpg" alt="Tahsan Anindo in a red t-shirt giving a thumbs up in a bathroom mirror while holding the Earth Beauty & You Charcoal Detox Face Wash" loading="lazy" />
+                <span class="g-cap"><span>Earth Beauty &amp; You</span><b>Mirror Selfie, Thumbs Up</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="eby" data-title="The Earth Beauty Gift Card" data-sub="Earth Beauty &amp; You · PR">
+                <img src="assets/img025.jpg" alt="Hands holding the Earth Beauty & You gift card that reads Enjoy our gift" loading="lazy" />
+                <span class="g-cap"><span>Earth Beauty &amp; You</span><b>The Gift Card, In Hand</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="eby" data-title="At the Desk — Face Wash in Hand" data-sub="Earth Beauty &amp; You · PR">
+                <img src="assets/img026.jpg" alt="Tahsan Anindo seated at his desk holding the Charcoal Detox Face Wash with the Earth Beauty & You bag behind him" loading="lazy" />
+                <span class="g-cap"><span>Earth Beauty &amp; You</span><b>At the Desk, Face Wash in Hand</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="eby" data-title="Out of the Bag — The Unboxing Shot" data-sub="Earth Beauty &amp; You · PR">
+                <img src="assets/img027.jpg" alt="Hands taking the Charcoal Detox Face Wash tube out of the Earth Beauty & You bag under a desk lamp" loading="lazy" />
+                <span class="g-cap"><span>Earth Beauty &amp; You</span><b>Out of the Bag, The Unboxing Shot</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="eby" data-title="Charcoal Detox — Anti-Pollution Deep Clean" data-sub="Earth Beauty &amp; You · PR">
+                <img src="assets/img028.jpg" alt="A hand holding the Charcoal Detox Face Wash tube under the text Charcoal Detox Anti-Pollution Deep Clean" loading="lazy" />
+                <span class="g-cap"><span>Earth Beauty &amp; You</span><b>Charcoal Detox, Anti-Pollution Deep Clean</b></span>
+              </button>
+              <button class="g-item bubble-host full" data-folder="eby" data-title="Charcoal Detox Face Wash — In Hand" data-sub="Earth Beauty &amp; You · PR">
+                <img src="assets/img029.jpg" alt="A hand holding the Earth Beauty & You Charcoal Detox Face Wash tube indoors" loading="lazy" />
+                <span class="g-cap"><span>Earth Beauty &amp; You</span><b>Charcoal Detox Face Wash, In Hand</b></span>
+              </button>
+            </div>
+          </section>
+          </div>
         <div class="gallery" id="gallery">
           <button class="g-item bubble-host wide" data-folder="top" data-title="Museum of the Future — Dubai" data-sub="Top Library · Dubai, UAE">
-            <img src="assets/img08.jpg" alt="Tahsan Anindo in a red t-shirt in front of the Museum of the Future in Dubai" loading="lazy" />
+            <img src="assets/img002.jpg" alt="Tahsan Anindo in a red t-shirt in front of the Museum of the Future in Dubai" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>Museum of the Future, Dubai</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="top" data-title="Cream Blazer — Seated Portrait" data-sub="Top Library · Blazer">
-            <img src="assets/img09.jpg" alt="Tahsan Anindo seated in a cream blazer on a white chair at a red and white floral backdrop" loading="lazy" />
+            <img src="assets/img005.jpg" alt="Tahsan Anindo seated in a cream blazer on a white chair at a red and white floral backdrop" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>Cream Blazer, Seated</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="top" data-title="Red Blazer — Standing Editorial" data-sub="Top Library · Blazer">
-            <img src="assets/img10.jpg" alt="Tahsan Anindo standing in a red blazer in front of a white bookshelf wall" loading="lazy" />
+            <img src="assets/img030.jpg" alt="Tahsan Anindo standing in a red blazer in front of a white bookshelf wall" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>Red Blazer, Standing</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="top" data-title="Cover Portrait — The Signature Suit" data-sub="Top Library · Cover Portrait">
-            <img src="assets/img11.jpg" alt="Tahsan Anindo in a black suit and white shirt with a blue-dial watch against a black and gold textured wall — the cover portrait" loading="lazy" />
+            <img src="assets/img001.jpg" alt="Tahsan Anindo in a black suit and white shirt with a blue-dial watch against a black and gold textured wall — the cover portrait" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>Cover Portrait, The Signature Suit</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="top" data-title="The Great Wall — Beijing" data-sub="Top Library · Great Wall, China">
-            <img src="assets/img12.jpg" alt="Tahsan Anindo with arms open standing on the Great Wall of China with green mountains behind" loading="lazy" />
+            <img src="assets/img012.jpg" alt="Tahsan Anindo with arms open standing on the Great Wall of China with green mountains behind" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>The Great Wall</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="top" data-title="Bird's Nest at Night — Beijing" data-sub="Top Library · Beijing, China">
-            <img src="assets/img13.jpg" alt="Tahsan Anindo with arms open in front of the illuminated Bird's Nest Olympic Stadium in Beijing at night" loading="lazy" />
+            <img src="assets/img031.jpg" alt="Tahsan Anindo with arms open in front of the illuminated Bird's Nest Olympic Stadium in Beijing at night" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>Bird's Nest at Night, Beijing</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="top" data-title="Burj Khalifa — Downtown Dubai" data-sub="Top Library · Dubai, UAE">
-            <img src="assets/img14.jpg" alt="Tahsan Anindo in sunglasses in front of the Burj Khalifa and Dubai Fountain lake at sunset" loading="lazy" />
+            <img src="assets/img032.jpg" alt="Tahsan Anindo in sunglasses in front of the Burj Khalifa and Dubai Fountain lake at sunset" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>Burj Khalifa, Downtown Dubai</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="top" data-title="Cream Blazer — Floral Arch" data-sub="Top Library · Blazer">
-            <img src="assets/img15.jpg" alt="Tahsan Anindo in a cream blazer and gold watch under a floral arch with fairy lights and a red carpet" loading="lazy" />
+            <img src="assets/img033.jpg" alt="Tahsan Anindo in a cream blazer and gold watch under a floral arch with fairy lights and a red carpet" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>Cream Blazer, Floral Arch</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="top" data-title="Red Blazer — Lounge Chair" data-sub="Top Library · Blazer">
-            <img src="assets/img16.jpg" alt="Tahsan Anindo in a red blazer seated in a tall patterned lounge chair" loading="lazy" />
+            <img src="assets/img034.jpg" alt="Tahsan Anindo in a red blazer seated in a tall patterned lounge chair" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>Red Blazer, Lounge Chair</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="top" data-title="The Golden Throne — Luoyang" data-sub="Top Library · Luoyang, China">
-            <img src="assets/img17.jpg" alt="Tahsan Anindo seated on an ornate golden dragon throne against a red and gold palace wall in Luoyang" loading="lazy" />
+            <img src="assets/img035.jpg" alt="Tahsan Anindo seated on an ornate golden dragon throne against a red and gold palace wall in Luoyang" loading="lazy" />
             <span class="g-cap"><span>Top Library</span><b>The Golden Throne, Luoyang</b></span>
           </button>
           <button class="g-item bubble-host full" data-folder="blazer" data-title="Cream Blazer — Seated Portrait" data-sub="Blazer · Seated portrait">
-            <img src="assets/img18.jpg" alt="Tahsan Anindo seated in a cream blazer on a white chair at a red and white floral backdrop — shown in full" loading="lazy" />
+            <img src="assets/img005.jpg" alt="Tahsan Anindo seated in a cream blazer on a white chair at a red and white floral backdrop — shown in full" loading="lazy" />
             <span class="g-cap"><span>Blazer</span><b>Cream Blazer, Seated Portrait</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="blazer" data-title="Cream Blazer — Fairy Lights" data-sub="Blazer · Event editorial">
-            <img src="assets/img19.jpg" alt="Tahsan Anindo in a cream blazer under fairy lights and red floral decorations" loading="lazy" />
+            <img src="assets/img036.jpg" alt="Tahsan Anindo in a cream blazer under fairy lights and red floral decorations" loading="lazy" />
             <span class="g-cap"><span>Blazer</span><b>Cream Blazer, Fairy Lights</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="blazer" data-title="Cream Blazer — Floral Arch" data-sub="Blazer · Event editorial">
-            <img src="assets/img20.jpg" alt="Tahsan Anindo in a cream blazer and gold watch under a floral arch with fairy lights and a red carpet" loading="lazy" />
+            <img src="assets/img033.jpg" alt="Tahsan Anindo in a cream blazer and gold watch under a floral arch with fairy lights and a red carpet" loading="lazy" />
             <span class="g-cap"><span>Blazer</span><b>Cream Blazer, Floral Arch</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="blazer" data-title="Burgundy Blazer — Lounge Chair" data-sub="Blazer · Hotel editorial">
-            <img src="assets/img21.jpg" alt="Tahsan Anindo in a burgundy blazer seated in a tall patterned lounge chair" loading="lazy" />
+            <img src="assets/img034.jpg" alt="Tahsan Anindo in a burgundy blazer seated in a tall patterned lounge chair" loading="lazy" />
             <span class="g-cap"><span>Blazer</span><b>Burgundy Blazer, Lounge Chair</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="blazer" data-title="Burgundy Blazer — The Library Look" data-sub="Blazer · Hotel editorial">
-            <img src="assets/img22.jpg" alt="Tahsan Anindo in a burgundy blazer in front of a white bookshelf wall" loading="lazy" />
+            <img src="assets/img030.jpg" alt="Tahsan Anindo in a burgundy blazer in front of a white bookshelf wall" loading="lazy" />
             <span class="g-cap"><span>Blazer</span><b>Burgundy Blazer, Library</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="blazer" data-title="Burgundy Blazer — Standing Editorial" data-sub="Blazer · Hotel editorial">
-            <img src="assets/img23.jpg" alt="Tahsan Anindo standing in a burgundy blazer beside illuminated bookshelves and a grey armchair" loading="lazy" />
+            <img src="assets/img037.jpg" alt="Tahsan Anindo standing in a burgundy blazer beside illuminated bookshelves and a grey armchair" loading="lazy" />
             <span class="g-cap"><span>Blazer</span><b>Burgundy Blazer, Standing</b></span>
           </button>
           <button class="g-item bubble-host wide" data-folder="blazer" data-title="Cover Portrait — The Signature Suit" data-sub="Blazer · Cover Portrait">
-            <img src="assets/img24.jpg" alt="Tahsan Anindo in a black suit and white shirt with a blue-dial watch against a black and gold textured wall — the cover portrait" loading="lazy" />
+            <img src="assets/img001.jpg" alt="Tahsan Anindo in a black suit and white shirt with a blue-dial watch against a black and gold textured wall — the cover portrait" loading="lazy" />
             <span class="g-cap"><span>Blazer</span><b>Cover Portrait, The Signature Suit</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Lantern Street — Luoyang Nights" data-sub="Travel · Luoyang, Henan, China">
-            <img src="assets/img25.jpg" alt="Tahsan Anindo in a red t-shirt on a lantern-lit street at night in Luoyang with glowing red lanterns overhead" loading="lazy" />
+            <img src="assets/img038.jpg" alt="Tahsan Anindo in a red t-shirt on a lantern-lit street at night in Luoyang with glowing red lanterns overhead" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Lantern Street, Luoyang</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="The Golden Throne — Luoyang" data-sub="Travel · Luoyang, Henan, China">
-            <img src="assets/img26.jpg" alt="Tahsan Anindo seated on an ornate golden dragon throne against a red and gold palace wall in Luoyang" loading="lazy" />
+            <img src="assets/img035.jpg" alt="Tahsan Anindo seated on an ornate golden dragon throne against a red and gold palace wall in Luoyang" loading="lazy" />
             <span class="g-cap"><span>China</span><b>The Golden Throne</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Golden Pagoda at Night — Luoyang" data-sub="Travel · Luoyang, Henan, China">
-            <img src="assets/img27.jpg" alt="A golden multi-tiered pagoda glowing at night in Luoyang, seen above dark green foliage" loading="lazy" />
+            <img src="assets/img039.jpg" alt="A golden multi-tiered pagoda glowing at night in Luoyang, seen above dark green foliage" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Golden Pagoda at Night</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Festival Tower at Night — Luoyang" data-sub="Travel · Luoyang, Henan, China">
-            <img src="assets/img28.jpg" alt="An illuminated traditional watchtower at night in Luoyang with festival crowds, lanterns and light beams" loading="lazy" />
+            <img src="assets/img040.jpg" alt="An illuminated traditional watchtower at night in Luoyang with festival crowds, lanterns and light beams" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Festival Tower at Night</b></span>
           </button>
           <button class="g-item bubble-host wide" data-folder="china" data-title="Yingtian Gate at Night — Luoyang" data-sub="Travel · Luoyang, Henan, China">
-            <img src="assets/img29.jpg" alt="The grand Yingtian Gate in Luoyang glowing gold and orange at night above its stone walls" loading="lazy" />
+            <img src="assets/img041.jpg" alt="The grand Yingtian Gate in Luoyang glowing gold and orange at night above its stone walls" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Yingtian Gate at Night</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Love Arch — Baoquan Glass Deck" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img30.jpg" alt="Tahsan Anindo with arms open inside a giant red heart sculpture on a glass deck above the Baoquan canyon" loading="lazy" />
+            <img src="assets/img042.jpg" alt="Tahsan Anindo with arms open inside a giant red heart sculpture on a glass deck above the Baoquan canyon" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Love Arch, Baoquan</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Heart Sculpture — Baoquan Canyon" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img31.jpg" alt="A red heart sculpture with flowers on a glass viewing platform above the Baoquan canyon and cliffs" loading="lazy" />
+            <img src="assets/img043.jpg" alt="A red heart sculpture with flowers on a glass viewing platform above the Baoquan canyon and cliffs" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Heart Sculpture, Canyon View</b></span>
           </button>
           <button class="g-item bubble-host wide" data-folder="china" data-title="Baoquan Lake — The Full Valley" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img32.jpg" alt="Wide view of the turquoise Baoquan lake winding between green forested cliffs under a blue sky" loading="lazy" />
+            <img src="assets/img044.jpg" alt="Wide view of the turquoise Baoquan lake winding between green forested cliffs under a blue sky" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Baoquan Lake, Full Valley</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Canyon Deck — Baoquan" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img33.jpg" alt="Tahsan Anindo in a white t-shirt and sunglasses standing on a curved deck above the Baoquan canyon and lake" loading="lazy" />
+            <img src="assets/img045.jpg" alt="Tahsan Anindo in a white t-shirt and sunglasses standing on a curved deck above the Baoquan canyon and lake" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Canyon Deck, Baoquan</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="At the Railing — Baoquan Viewpoint" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img34.jpg" alt="Tahsan Anindo leaning on a wooden railing at a viewpoint above the turquoise Baoquan lake and cliffs" loading="lazy" />
+            <img src="assets/img046.jpg" alt="Tahsan Anindo leaning on a wooden railing at a viewpoint above the turquoise Baoquan lake and cliffs" loading="lazy" />
             <span class="g-cap"><span>China</span><b>At the Railing, Baoquan</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="blazer" data-title="Suit Portrait — Golden Lights" data-sub="Blazer · Editorial">
-            <img src="assets/img35.jpg" alt="Tahsan Anindo in a suit portrait with warm golden lights" loading="lazy" />
+            <img src="assets/img047.jpg" alt="Tahsan Anindo in a suit portrait with warm golden lights" loading="lazy" />
             <span class="g-cap"><span>Blazer</span><b>Suit Portrait, Golden Lights</b></span>
           </button>
           <button class="g-item bubble-host full" data-folder="bangladesh" data-title="Hotel Lounge — Bangladesh" data-sub="Bangladesh">
-            <img src="assets/img36.jpg" alt="Tahsan Anindo relaxing in a white hotel bathrobe on a cream sofa in warm light in Bangladesh" loading="lazy" />
+            <img src="assets/img004.jpg" alt="Tahsan Anindo relaxing in a white hotel bathrobe on a cream sofa in warm light in Bangladesh" loading="lazy" />
             <span class="g-cap"><span>Bangladesh</span><b>Hotel Lounge, Bangladesh</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="bangladesh" data-title="Hotel Mirror — Bangladesh" data-sub="Bangladesh">
-            <img src="assets/img37.jpg" alt="Tahsan Anindo in a white hotel bathrobe taking a mirror selfie with his phone in Bangladesh" loading="lazy" />
+            <img src="assets/img048.jpg" alt="Tahsan Anindo in a white hotel bathrobe taking a mirror selfie with his phone in Bangladesh" loading="lazy" />
             <span class="g-cap"><span>Bangladesh</span><b>Hotel Mirror, Bangladesh</b></span>
           </button>
-          <button class="g-item bubble-host full" data-folder="uae" data-title="Burj Khalifa — Downtown Dubai" data-sub="Travel · Dubai, UAE">
-            <img src="assets/img38.jpg" alt="Tahsan Anindo in sunglasses in front of the Burj Khalifa and Dubai Fountain lake at sunset" loading="lazy" />
-            <span class="g-cap"><span>Dubai, UAE</span><b>Burj Khalifa, Downtown</b></span>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — At the Railing, Burj Khalifa" data-sub="Travel · Burj Khalifa, Dubai, UAE">
+            <img src="assets/img011.jpg" alt="Tahsan Anindo in a red t-shirt and sunglasses leaning on a stone railing with the Burj Khalifa rising behind him in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, At the Railing</b></span>
           </button>
-          <button class="g-item bubble-host wide" data-folder="uae" data-title="Museum of the Future — Dubai" data-sub="Travel · Dubai, UAE">
-            <img src="assets/img39.jpg" alt="Tahsan Anindo in a red t-shirt in front of the Museum of the Future in Dubai" loading="lazy" />
-            <span class="g-cap"><span>Dubai, UAE</span><b>Museum of the Future</b></span>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Burj Plaza" data-sub="Travel · Burj Khalifa, Dubai, UAE">
+            <img src="assets/img049.jpg" alt="Tahsan Anindo in a red t-shirt walking across the plaza in front of the Burj Khalifa and the curved Dubai Opera building" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Burj Plaza</b></span>
           </button>
-          <button class="g-item bubble-host" data-folder="uae" data-title="Dubai Marina — Blazer by the Water" data-sub="Travel · Dubai, UAE">
-            <img src="assets/img40.jpg" alt="Tahsan Anindo in a grey blazer and red t-shirt overlooking Dubai Marina" loading="lazy" />
-            <span class="g-cap"><span>Dubai, UAE</span><b>Dubai Marina</b></span>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — Burj Selfie" data-sub="Travel · Burj Khalifa, Dubai, UAE">
+            <img src="assets/img050.jpg" alt="Selfie of Tahsan Anindo in a red t-shirt and sunglasses with the Burj Khalifa towering behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, Burj Selfie</b></span>
           </button>
-          <button class="g-item bubble-host" data-folder="uae" data-title="Blue Lamborghini — Dubai Skyline" data-sub="Travel · Dubai, UAE">
-            <img src="assets/img41.jpg" alt="Tahsan Anindo leaning on a bright blue Lamborghini with the Dubai skyline behind him" loading="lazy" />
-            <span class="g-cap"><span>Dubai, UAE</span><b>Blue Lamborghini, Skyline</b></span>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Burj Khalifa — The Tower View" data-sub="Travel · Burj Khalifa, Dubai, UAE">
+            <img src="assets/img051.jpg" alt="The Burj Khalifa and the Downtown Dubai towers against a clear blue sky" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Burj Khalifa, The Tower View</b></span>
           </button>
-          <button class="g-item bubble-host wide" data-folder="uae" data-title="Rolls-Royce — Dubai" data-sub="Travel · Dubai, UAE">
-            <img src="assets/img42.jpg" alt="Tahsan Anindo in a green t-shirt and sunglasses standing in front of a blue and white Rolls-Royce in Dubai" loading="lazy" />
-            <span class="g-cap"><span>Dubai, UAE</span><b>Rolls-Royce, Dubai</b></span>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Night Boat" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img052.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt seated on a boat at night, lit blue, with the Dubai towers glowing across the water" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Night Boat</b></span>
           </button>
-          <button class="g-item bubble-host" data-folder="uae" data-title="Dubai Marina — The Balcony View" data-sub="Travel · Dubai, UAE">
-            <img src="assets/img43.jpg" alt="Tahsan Anindo in a grey blazer leaning on a balcony railing overlooking Dubai Marina and its yachts" loading="lazy" />
-            <span class="g-cap"><span>Dubai, UAE</span><b>Marina, Balcony View</b></span>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — City Lights" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img053.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt seated on a boat at night with the illuminated Dubai skyline reflected on the water" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, City Lights</b></span>
           </button>
-          <button class="g-item bubble-host" data-folder="uae" data-title="Dubai Marina — Red &amp; Grey" data-sub="Travel · Dubai, UAE">
-            <img src="assets/img44.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt standing in front of the Dubai Marina skyline" loading="lazy" />
-            <span class="g-cap"><span>Dubai, UAE</span><b>Marina, Red &amp; Grey</b></span>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — On the Water" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img054.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt seated on a boat at night with his arms along the side and the Dubai skyline behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, On the Water</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Ain Dubai" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img055.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt standing on a boat at night in front of the illuminated Ain Dubai wheel" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Ain Dubai</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — At the Bow" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img056.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt standing at the bow of a boat at night, holding the rail with the city lights behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, At the Bow</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Marina Nights" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img057.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt seated on a boat at night with the golden marina buildings glowing across the water" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Marina Nights</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Holding the Rail" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img058.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt on a boat at night, holding the chrome rail with the skyline behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Holding the Rail</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Close-Up on Board" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img059.jpg" alt="Close-up of Tahsan Anindo in a grey blazer over a red t-shirt seated on the boat at night, the skyline glowing behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Close-Up on Board</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Life Jacket On" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img060.jpg" alt="Tahsan Anindo standing on the boat deck at night wearing a yellow life jacket over his red t-shirt, arms open, the city lights behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Life Jacket On</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — At the Helm" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img061.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt seated at the helm of the boat at night beside the captain, a lit cruise ship behind them" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, At the Helm</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — The Cruise Ship" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img062.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt seated at the front of the boat smiling, a grand illuminated cruise ship behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, The Cruise Ship</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — The Great Wheel" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img063.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt on the boat at night with the Ain Dubai wheel glowing behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, The Great Wheel</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Wheel at Night" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img064.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt leaning back on the boat at night with Ain Dubai lit up behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Wheel at Night</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — A Cup on Board" data-sub="Travel · Night Cruise, Dubai, UAE">
+            <img src="assets/img065.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt holding a cup on the boat at night, a lit tower and bridge across the water behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, A Cup on Board</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Sheikh Zayed Mosque — The Grand Front" data-sub="Travel · Sheikh Zayed Grand Mosque, Abu Dhabi, UAE">
+            <img src="assets/img066.jpg" alt="The Sheikh Zayed Grand Mosque in Abu Dhabi — white domes and minarets above the floral marble courtyard" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Sheikh Zayed Mosque, The Grand Front</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Sheikh Zayed Mosque — The Reflecting Pool" data-sub="Travel · Sheikh Zayed Grand Mosque, Abu Dhabi, UAE">
+            <img src="assets/img067.jpg" alt="The white domes and arches of the Sheikh Zayed Grand Mosque in Abu Dhabi reflected in its long pool" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Sheikh Zayed Mosque, The Reflecting Pool</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red BB Tee — At the Mosque" data-sub="Travel · Sheikh Zayed Grand Mosque, Abu Dhabi, UAE">
+            <img src="assets/img068.jpg" alt="Tahsan Anindo in a red BB t-shirt standing by the golden railing in front of the Sheikh Zayed Grand Mosque in Abu Dhabi" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red BB Tee, At the Mosque</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Emirates Plane" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img069.jpg" alt="Tahsan Anindo in a red t-shirt in front of the giant Emirates plane made of flowers at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Emirates Plane</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Yellow Bicycle" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img070.jpg" alt="Tahsan Anindo in a red t-shirt riding the yellow bicycle in front of the floral Emirates plane at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Yellow Bicycle</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — Among the Sunflowers" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img071.jpg" alt="Tahsan Anindo in a red t-shirt standing among sunflowers in front of the floral Emirates plane at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, Among the Sunflowers</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Red Bicycle" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img072.jpg" alt="Tahsan Anindo in a red t-shirt in front of the floral Emirates plane at Dubai Miracle Garden, a red bicycle in the flower beds in front" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Red Bicycle</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Heart Arch" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img073.jpg" alt="Tahsan Anindo in a red t-shirt walking the garden path under the pink floral heart arches at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Heart Arch</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — Beside the Plane" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img074.jpg" alt="Tahsan Anindo in a red t-shirt in profile beside the floral Emirates lettering and a pink flower arch at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, Beside the Plane</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Emirates Letters" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img075.jpg" alt="Tahsan Anindo in a red t-shirt standing in front of the gold Emirates lettering on the floral plane at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Emirates Letters</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — Sunglasses On" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img076.jpg" alt="Tahsan Anindo in a red t-shirt adjusting his sunglasses in front of the floral Emirates plane and sunflowers at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, Sunglasses On</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Full Plane" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img077.jpg" alt="Tahsan Anindo in a red t-shirt standing in front of the full floral Emirates A380 at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Full Plane</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — Peace at the Plane" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img078.jpg" alt="Tahsan Anindo in a red t-shirt holding up a peace sign in front of the floral Emirates plane at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, Peace at the Plane</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Big Heart" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img079.jpg" alt="Tahsan Anindo in a red t-shirt with two companions in front of the giant pink floral heart at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Big Heart</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Garden Path" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img080.jpg" alt="Tahsan Anindo in a red t-shirt walking the tiled garden path lined with hanging flower baskets at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Garden Path</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Genie &amp; the Castle" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img081.jpg" alt="Tahsan Anindo in a red t-shirt in front of the floral castle and the blue Genie at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Genie &amp; the Castle</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — At the Castle Rail" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img082.jpg" alt="Tahsan Anindo in a red t-shirt leaning on the railing planters with the floral castle and the blue Genie behind him at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, At the Castle Rail</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Heart Walk" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img083.jpg" alt="Tahsan Anindo in a red t-shirt walking the path beside the tall pink floral heart sculpture at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Heart Walk</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Green Horses" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img084.jpg" alt="Tahsan Anindo in a red t-shirt standing between the two giant green horse-head topiaries at Dubai Miracle Garden" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Green Horses</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Garden Entrance" data-sub="Travel · Dubai Miracle Garden, UAE">
+            <img src="assets/img085.jpg" alt="Tahsan Anindo in a red t-shirt standing at the Dubai Miracle Garden entrance under the giant yellow flower vases" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Garden Entrance</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="White Tee — The Night Garden" data-sub="Travel · Dubai, UAE">
+            <img src="assets/img086.jpg" alt="Tahsan Anindo in a white t-shirt at a night garden festival in Dubai, illuminated tree sculptures glowing behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>White Tee, The Night Garden</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="White NTD Tee — Marina at Night" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img087.jpg" alt="Tahsan Anindo in a white NTD t-shirt leaning on a blue railing at night with the Dubai Marina towers lit up behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>White NTD Tee, Marina at Night</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="White NTD Tee — JBR Beach" data-sub="Travel · JBR Beach, Dubai, UAE">
+            <img src="assets/img088.jpg" alt="Tahsan Anindo in a white NTD t-shirt standing on JBR beach in Dubai at sunset with the Ain Dubai wheel behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>White NTD Tee, JBR Beach</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="White NTD Tee — Sunset Shoreline" data-sub="Travel · JBR Beach, Dubai, UAE">
+            <img src="assets/img089.jpg" alt="Tahsan Anindo in a white NTD t-shirt standing on the sand at JBR beach in Dubai at sunset, the sea and Ain Dubai behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>White NTD Tee, Sunset Shoreline</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Green NTD Tee — The Rolls-Royce" data-sub="Travel · Dubai, UAE">
+            <img src="assets/img090.jpg" alt="Tahsan Anindo in a green NTD t-shirt standing beside a blue and white Rolls-Royce on a Dubai street" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Green NTD Tee, The Rolls-Royce</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Rolls-Royce — Head-On" data-sub="Travel · Dubai, UAE">
+            <img src="assets/img091.jpg" alt="Front view of the blue and white Rolls-Royce in Dubai, with Tahsan Anindo's reflection caught in the chrome grille" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Rolls-Royce, Head-On</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Green NTD Tee — The Orange Raptor" data-sub="Travel · Dubai, UAE">
+            <img src="assets/img092.jpg" alt="Tahsan Anindo in a green NTD t-shirt standing beside an orange Ford Raptor with the Dubai skyline behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Green NTD Tee, The Orange Raptor</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — Marina Railing" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img093.jpg" alt="Tahsan Anindo in a red t-shirt leaning on the Dubai Marina railing with the twisted Cayan Tower and the marina towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, Marina Railing</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Marina Walk" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img094.jpg" alt="Tahsan Anindo in a red t-shirt standing on the Dubai Marina walkway with yachts and towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Marina Walk</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — Arms Open by the Sea" data-sub="Travel · Dubai, UAE">
+            <img src="assets/img095.jpg" alt="Tahsan Anindo in a black t-shirt and sunglasses standing on seaside rocks with his arms spread wide, the sea and jet skis behind him in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, Arms Open by the Sea</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — On the Rocks" data-sub="Travel · Dubai, UAE">
+            <img src="assets/img096.jpg" alt="Tahsan Anindo in a black t-shirt and sunglasses standing on the rocks facing the camera, the open sea behind him in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, On the Rocks</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — The Marina Walk" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img097.jpg" alt="Tahsan Anindo in a black t-shirt walking the Dubai Marina promenade, the glass marina towers rising behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, The Marina Walk</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — The Dubai Marina Sign" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img098.jpg" alt="Tahsan Anindo in a black t-shirt leaning on the big blue hashtag Dubai Marina sign, palm trees and marina towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, The Dubai Marina Sign</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — The Marina Plaza" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img099.jpg" alt="Tahsan Anindo in a black t-shirt standing in the palm-lined Dubai Marina plaza with the twisted Cayan Tower behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, The Marina Plaza</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — Palms at the Marina" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img100.jpg" alt="Tahsan Anindo in a black t-shirt standing among the palm trees of the Dubai Marina plaza, the glass towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, Palms at the Marina</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — The Plaza Look" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img101.jpg" alt="Tahsan Anindo in a black t-shirt looking to the side in the Dubai Marina plaza, palm trees and glass towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, The Plaza Look</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — Marina Railing" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img102.jpg" alt="Tahsan Anindo in a black t-shirt leaning on the Dubai Marina railing and looking back at the camera, the marina towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, Marina Railing</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — Atlantis, The Palm" data-sub="Travel · Palm Jumeirah, Dubai, UAE">
+            <img src="assets/img103.jpg" alt="Tahsan Anindo in a black t-shirt sitting on a wall with his arms crossed, Atlantis The Palm rising behind him on Palm Jumeirah in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, Atlantis, The Palm</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — On the Rocks at Atlantis" data-sub="Travel · Palm Jumeirah, Dubai, UAE">
+            <img src="assets/img104.jpg" alt="Tahsan Anindo in a black t-shirt standing on the rocks in front of Atlantis The Palm on Palm Jumeirah in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, On the Rocks at Atlantis</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — Sea Railing Profile" data-sub="Travel · Palm Jumeirah, Dubai, UAE">
+            <img src="assets/img105.jpg" alt="Tahsan Anindo in a black t-shirt in profile at a white railing, looking out over the rocks and the sea at Palm Jumeirah in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, Sea Railing Profile</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Black Tee — Leaning on the Rail" data-sub="Travel · Palm Jumeirah, Dubai, UAE">
+            <img src="assets/img106.jpg" alt="Tahsan Anindo in a black t-shirt leaning back on a white railing with the rocky shore and the sea behind him at Palm Jumeirah in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Black Tee, Leaning on the Rail</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Burj Al Arab — The Sail Tower" data-sub="Travel · Burj Al Arab, Dubai, UAE">
+            <img src="assets/img107.jpg" alt="The sail-shaped Burj Al Arab in Dubai rising above the trees at its entrance under a bright blue sky" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Burj Al Arab, The Sail Tower</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Burj Al Arab — From the Gate" data-sub="Travel · Burj Al Arab, Dubai, UAE">
+            <img src="assets/img108.jpg" alt="The Burj Al Arab in Dubai seen from its entrance gate and driveway under a clear blue sky" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Burj Al Arab, From the Gate</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Marina Profile" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img109.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt in profile on a balcony above Dubai Marina, the towers across the water behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Marina Profile</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — At the Balcony Rail" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img110.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt resting his arm on a balcony railing above Dubai Marina, yachts and towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, At the Balcony Rail</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Over the Marina" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img111.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt leaning on a balcony railing with his back to the camera, looking over the yachts and towers of Dubai Marina" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Over the Marina</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — Marina Balcony" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img112.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt standing on a balcony above Dubai Marina, yachts and towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, Marina Balcony</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Blazer &amp; Red Tee — The Wide Marina View" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img113.jpg" alt="Tahsan Anindo in a grey blazer over a red t-shirt leaning on a glass balcony railing, the full sweep of Dubai Marina and its towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Blazer &amp; Red Tee, The Wide Marina View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Dubai Marina — Towers &amp; Palms" data-sub="Travel · Dubai Marina, UAE">
+            <img src="assets/img114.jpg" alt="The glass towers of Dubai Marina rising above palm trees and the marina promenade under a clear blue sky" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Dubai Marina, Towers &amp; Palms</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — Museum of the Future" data-sub="Travel · Museum of the Future, Dubai, UAE">
+            <img src="assets/img115.jpg" alt="Tahsan Anindo in a red Gratitude t-shirt with his arms crossed in front of the silver calligraphy ring of the Museum of the Future in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, Museum of the Future</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — At the Museum of the Future" data-sub="Travel · Museum of the Future, Dubai, UAE">
+            <img src="assets/img002.jpg" alt="Tahsan Anindo in a red t-shirt in front of the Museum of the Future in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, At the Museum of the Future</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — Walking to the Frame" data-sub="Travel · Dubai Frame, UAE">
+            <img src="assets/img116.jpg" alt="Tahsan Anindo in a red t-shirt walking across the plaza toward the golden Dubai Frame" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, Walking to the Frame</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Dubai Frame Sign" data-sub="Travel · Dubai Frame, UAE">
+            <img src="assets/img117.jpg" alt="Tahsan Anindo in a red Gratitude t-shirt standing in front of the gold Dubai Frame sign wall" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Dubai Frame Sign</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Full Frame" data-sub="Travel · Dubai Frame, UAE">
+            <img src="assets/img118.jpg" alt="Tahsan Anindo in a red t-shirt standing with the full golden Dubai Frame towering behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Full Frame</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Red Tee — The Green Mustang GT" data-sub="Travel · Dubai, UAE">
+            <img src="assets/img119.jpg" alt="Tahsan Anindo in a red Gratitude t-shirt standing behind a green Ford Mustang GT convertible in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Red Tee, The Green Mustang GT</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Dubai Frame — The Golden Tower" data-sub="Travel · Dubai Frame, UAE">
+            <img src="assets/img120.jpg" alt="The golden Dubai Frame rising against a clear blue sky above its entrance plaza" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Dubai Frame, The Golden Tower</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Green NTD Tee — Sunset by the Lake" data-sub="Travel · Burj Khalifa, Dubai, UAE">
+            <img src="assets/img032.jpg" alt="Tahsan Anindo in a dark green NTD t-shirt and sunglasses leaning on the railing of the Dubai Fountain lake at sunset, the Burj Khalifa rising behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Green NTD Tee, Sunset by the Lake</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Green NTD Tee — Fountain Rail at Dusk" data-sub="Travel · Burj Khalifa, Dubai, UAE">
+            <img src="assets/img121.jpg" alt="Tahsan Anindo in a dark green NTD t-shirt leaning on the railing of the Dubai Fountain lake at dusk, the Burj Khalifa glowing behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Green NTD Tee, Fountain Rail at Dusk</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Green NTD Tee — The Downtown Promenade" data-sub="Travel · Downtown Dubai, UAE">
+            <img src="assets/img122.jpg" alt="Tahsan Anindo in a green NTD t-shirt on the busy Downtown Dubai promenade, the Address Sky View tower and the silver heart sculpture behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Green NTD Tee, The Downtown Promenade</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Green NTD Tee — Below the Burj" data-sub="Travel · Burj Khalifa, Dubai, UAE">
+            <img src="assets/img123.jpg" alt="Tahsan Anindo in a green NTD t-shirt standing among visitors on the bridge below the Burj Khalifa in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Green NTD Tee, Below the Burj</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Green NTD Tee — The Blue Lamborghini" data-sub="Travel · Dubai, UAE">
+            <img src="assets/img124.jpg" alt="Tahsan Anindo in a green NTD t-shirt leaning on a matte blue Lamborghini in Dubai, towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Green NTD Tee, The Blue Lamborghini</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Green NTD Tee — The Rolls-Royce Grille" data-sub="Travel · Dubai, UAE">
+            <img src="assets/img125.jpg" alt="Tahsan Anindo in a green NTD t-shirt standing in front of the chrome grille of a blue and white Rolls-Royce in Dubai" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Green NTD Tee, The Rolls-Royce Grille</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Downtown Dubai — Towers at Dusk" data-sub="Travel · Downtown Dubai, UAE">
+            <img src="assets/img126.jpg" alt="The Downtown Dubai towers, including the Address Sky View, against the evening sky above the Dubai Mall promenade" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Downtown Dubai, Towers at Dusk</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Downtown Dubai — The Evening Crowd" data-sub="Travel · Downtown Dubai, UAE">
+            <img src="assets/img127.jpg" alt="Crowds on the Downtown Dubai promenade at dusk, palm trees strung with lights and the Address Sky View tower above" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Downtown Dubai, The Evening Crowd</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="Burj Khalifa — Through the Glass" data-sub="Travel · Burj Khalifa, Dubai, UAE">
+            <img src="assets/img128.jpg" alt="The Burj Khalifa and the Downtown Dubai towers at sunset, seen through the geometric glass of a walkway above the traffic" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>Burj Khalifa, Through the Glass</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="uae" data-title="The Dubai Fountain — Burj at Dusk" data-sub="Travel · Burj Khalifa, Dubai, UAE">
+            <img src="assets/img129.jpg" alt="The Dubai Fountain jets lit gold on the lake at dusk, the Burj Khalifa and the Downtown towers rising behind" loading="lazy" />
+            <span class="g-cap"><span>Dubai, UAE</span><b>The Dubai Fountain, Burj at Dusk</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="CCTV Tower — Beijing CBD" data-sub="Travel · Beijing, China">
-            <img src="assets/img45.jpg" alt="Tahsan Anindo in a white t-shirt on a sky bridge with the CCTV Headquarters building in Beijing behind him" loading="lazy" />
+            <img src="assets/img130.jpg" alt="Tahsan Anindo in a white t-shirt on a sky bridge with the CCTV Headquarters building in Beijing behind him" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Beijing CBD</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="CITIC Tower — Beijing CBD" data-sub="Travel · Beijing, China">
-            <img src="assets/img46.jpg" alt="Tahsan Anindo in a white t-shirt standing on a Beijing street with the CITIC Tower and CCTV Headquarters behind him" loading="lazy" />
+            <img src="assets/img131.jpg" alt="Tahsan Anindo in a white t-shirt standing on a Beijing street with the CITIC Tower and CCTV Headquarters behind him" loading="lazy" />
             <span class="g-cap"><span>China</span><b>CITIC Tower, Beijing CBD</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Glass Towers — Beijing" data-sub="Travel · Beijing, China">
-            <img src="assets/img47.jpg" alt="Tahsan Anindo with arms crossed in front of curved glass skyscrapers in Beijing" loading="lazy" />
+            <img src="assets/img132.jpg" alt="Tahsan Anindo with arms crossed in front of curved glass skyscrapers in Beijing" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Glass Towers, Beijing</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — Willow Bridge" data-sub="Travel · Beijing, China">
-            <img src="assets/img48.jpg" alt="Tahsan Anindo in an orange polo shirt leaning on a red bridge railing under weeping willows at the Summer Palace in Beijing" loading="lazy" />
+            <img src="assets/img133.jpg" alt="Tahsan Anindo in an orange polo shirt leaning on a red bridge railing under weeping willows at the Summer Palace in Beijing" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Summer Palace, Willow Bridge</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Bird's Nest at Night — Beijing" data-sub="Travel · Beijing, China">
-            <img src="assets/img49.jpg" alt="Tahsan Anindo with arms open in front of the illuminated Bird's Nest Olympic Stadium in Beijing at night" loading="lazy" />
+            <img src="assets/img031.jpg" alt="Tahsan Anindo with arms open in front of the illuminated Bird's Nest Olympic Stadium in Beijing at night" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Bird's Nest at Night</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="CITIC Tower — The Green Lawn" data-sub="Travel · Beijing, China">
-            <img src="assets/img50.jpg" alt="Tahsan Anindo in a red t-shirt standing on a green lawn with the CITIC Tower rising behind him in Beijing" loading="lazy" />
+            <img src="assets/img134.jpg" alt="Tahsan Anindo in a red t-shirt standing on a green lawn with the CITIC Tower rising behind him in Beijing" loading="lazy" />
             <span class="g-cap"><span>China</span><b>CITIC Tower, The Lawn</b></span>
           </button>
           <button class="g-item bubble-host wide" data-folder="china" data-title="The Great Wall — Beijing" data-sub="Travel · Great Wall, China">
-            <img src="assets/img51.jpg" alt="Tahsan Anindo with arms open standing on the Great Wall of China with green mountains behind" loading="lazy" />
+            <img src="assets/img012.jpg" alt="Tahsan Anindo with arms open standing on the Great Wall of China with green mountains behind" loading="lazy" />
             <span class="g-cap"><span>China</span><b>The Great Wall</b></span>
           </button>
           <button class="g-item bubble-host wide" data-folder="china" data-title="Great Wall in the Mist" data-sub="Travel · Great Wall, China">
-            <img src="assets/img52.jpg" alt="The Great Wall of China winding through misty green mountains with visitors on the wall" loading="lazy" />
+            <img src="assets/img135.jpg" alt="The Great Wall of China winding through misty green mountains with visitors on the wall" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Great Wall in the Mist</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="On the Wall Steps — Great Wall" data-sub="Travel · Great Wall, China">
-            <img src="assets/img53.jpg" alt="Tahsan Anindo in a teal t-shirt and sunglasses standing on the steep stone steps of the Great Wall" loading="lazy" />
+            <img src="assets/img136.jpg" alt="Tahsan Anindo in a teal t-shirt and sunglasses standing on the steep stone steps of the Great Wall" loading="lazy" />
             <span class="g-cap"><span>China</span><b>On the Wall Steps</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Baoquan Canyon — Henan" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img54.jpg" alt="Tahsan Anindo in a white t-shirt overlooking the Baoquan canyon and emerald lake in Henan" loading="lazy" />
+            <img src="assets/img137.jpg" alt="Tahsan Anindo in a white t-shirt overlooking the Baoquan canyon and emerald lake in Henan" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Baoquan Canyon</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Above the Lake — Baoquan Viewpoint" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img55.jpg" alt="Tahsan Anindo on a viewing deck high above the turquoise Baoquan lake surrounded by green cliffs" loading="lazy" />
+            <img src="assets/img138.jpg" alt="Tahsan Anindo on a viewing deck high above the turquoise Baoquan lake surrounded by green cliffs" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Above the Lake, Baoquan</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Baoquan Canyon — Cliff View" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img56.jpg" alt="Tahsan Anindo in a white t-shirt and sunglasses on a wooden deck overlooking the Baoquan canyon cliffs" loading="lazy" />
+            <img src="assets/img139.jpg" alt="Tahsan Anindo in a white t-shirt and sunglasses on a wooden deck overlooking the Baoquan canyon cliffs" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Baoquan Canyon, Cliff View</b></span>
           </button>
           <button class="g-item bubble-host wide" data-folder="china" data-title="The Emerald Lake — Baoquan" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img57.jpg" alt="Tahsan Anindo leaning on a railing high above the emerald Baoquan lake surrounded by green hills" loading="lazy" />
+            <img src="assets/img140.jpg" alt="Tahsan Anindo leaning on a railing high above the emerald Baoquan lake surrounded by green hills" loading="lazy" />
             <span class="g-cap"><span>China</span><b>The Emerald Lake, Baoquan</b></span>
           </button>
           <button class="g-item bubble-host wide" data-folder="china" data-title="Baoquan Lake — Panorama" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img58.jpg" alt="Wide panorama of the turquoise Baoquan lake, flat-topped cliffs and flower gardens under a clear blue sky" loading="lazy" />
+            <img src="assets/img141.jpg" alt="Wide panorama of the turquoise Baoquan lake, flat-topped cliffs and flower gardens under a clear blue sky" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Baoquan Lake, Panorama</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Glass Bridge — Baoquan" data-sub="Travel · Baoquan, Henan, China">
-            <img src="assets/img59.jpg" alt="Tahsan Anindo sitting on the glass bridge at Baoquan with the canyon and lake visible far below" loading="lazy" />
+            <img src="assets/img142.jpg" alt="Tahsan Anindo sitting on the glass bridge at Baoquan with the canyon and lake visible far below" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Glass Bridge, Baoquan</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Mingtang at Night — Luoyang" data-sub="Travel · Luoyang, Henan, China">
-            <img src="assets/img60.jpg" alt="Golden illuminated traditional palace rooftops in Luoyang at night under a full moon" loading="lazy" />
+            <img src="assets/img143.jpg" alt="Golden illuminated traditional palace rooftops in Luoyang at night under a full moon" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Mingtang at Night, Luoyang</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Liziba at Night — Chongqing" data-sub="Travel · Chongqing, China">
-            <img src="assets/img61.jpg" alt="Tahsan Anindo at night in front of the Liziba monorail hillside and illuminated buildings in Chongqing" loading="lazy" />
+            <img src="assets/img144.jpg" alt="Tahsan Anindo at night in front of the Liziba monorail hillside and illuminated buildings in Chongqing" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Liziba at Night</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Chongqing Skyline — Night River View" data-sub="Travel · Chongqing, China">
-            <img src="assets/img62.jpg" alt="Tahsan Anindo on a riverside deck at night with the illuminated Chongqing skyline and red bridge behind him" loading="lazy" />
+            <img src="assets/img145.jpg" alt="Tahsan Anindo on a riverside deck at night with the illuminated Chongqing skyline and red bridge behind him" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Skyline, Night River View</b></span>
           </button>
           <button class="g-item bubble-host wide" data-folder="china" data-title="Hongya Cave — Chongqing" data-sub="Travel · Chongqing, China">
-            <img src="assets/img63.jpg" alt="Tahsan Anindo in a white t-shirt standing in front of the golden illuminated Hongya Cave complex in Chongqing at night" loading="lazy" />
+            <img src="assets/img146.jpg" alt="Tahsan Anindo in a white t-shirt standing in front of the golden illuminated Hongya Cave complex in Chongqing at night" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Hongya Cave</b></span>
           </button>
           <button class="g-item bubble-host wide" data-folder="china" data-title="Qiansimen Bridge — Chongqing Nights" data-sub="Travel · Chongqing, China">
-            <img src="assets/img64.jpg" alt="The red Qiansimen bridge and illuminated cruise boats on the river in Chongqing at night" loading="lazy" />
+            <img src="assets/img147.jpg" alt="The red Qiansimen bridge and illuminated cruise boats on the river in Chongqing at night" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Qiansimen Bridge, Night River</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Dameisha Pier — Shenzhen" data-sub="Travel · Shenzhen, China">
-            <img src="assets/img65.jpg" alt="Tahsan Anindo in a white polo shirt leaning on the railing of a pier above the turquoise sea at Dameisha beach in Shenzhen" loading="lazy" />
+            <img src="assets/img148.jpg" alt="Tahsan Anindo in a white polo shirt leaning on the railing of a pier above the turquoise sea at Dameisha beach in Shenzhen" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Dameisha Pier</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Dameisha Beach — Shenzhen" data-sub="Travel · Shenzhen, China">
-            <img src="assets/img66.jpg" alt="Tahsan Anindo in a blue t-shirt and shorts standing barefoot at the water's edge on Dameisha beach in Shenzhen" loading="lazy" />
+            <img src="assets/img149.jpg" alt="Tahsan Anindo in a blue t-shirt and shorts standing barefoot at the water's edge on Dameisha beach in Shenzhen" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Dameisha Beach</b></span>
           </button>
           <button class="g-item bubble-host" data-folder="china" data-title="Seaside Promenade — Shenzhen" data-sub="Travel · Shenzhen, China">
-            <img src="assets/img67.jpg" alt="Tahsan Anindo in a white polo shirt leaning on a railing with seaside resort buildings and green hills behind him in Shenzhen" loading="lazy" />
+            <img src="assets/img150.jpg" alt="Tahsan Anindo in a white polo shirt leaning on a railing with seaside resort buildings and green hills behind him in Shenzhen" loading="lazy" />
             <span class="g-cap"><span>China</span><b>Seaside Promenade</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="The CBD Crossing — CITIC Tower & CCTV" data-sub="Travel · Beijing, China">
+            <img src="assets/img151.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt and sunglasses standing in a wide Beijing CBD street with the CITIC Tower, the twin towers and the CCTV Headquarters behind him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>The CBD Crossing, Beijing</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="China Zun — At the Tower Base" data-sub="Travel · Beijing, China">
+            <img src="assets/img152.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt standing at the base of the China Zun CITIC Tower in Beijing with parked scooters and stone bollards around him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>China Zun, Tower Base</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="China Zun — The Full Tower" data-sub="Travel · Beijing, China">
+            <img src="assets/img153.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt standing in front of the full height of the China Zun CITIC Tower in Beijing with the corner of the CCTV Headquarters at the edge of the frame" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>China Zun, Full View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Glass Plaza — Looking Up" data-sub="Travel · Beijing, China">
+            <img src="assets/img154.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt in profile looking up at the curved glass towers of a Beijing CBD plaza" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Glass Plaza, Looking Up</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="People's Daily Tower — Street Portrait" data-sub="Travel · Beijing, China">
+            <img src="assets/img155.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt and sunglasses holding his bag strap on a Beijing street with the egg-shaped People's Daily headquarters tower behind him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>People's Daily Tower</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="CCTV Headquarters — The Plaza" data-sub="Travel · Beijing, China">
+            <img src="assets/img156.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt standing on a plaza in front of the CCTV Headquarters in Beijing with rows of parked scooters and stone bollards" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>CCTV Headquarters, The Plaza</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="The Bench — CCTV Garden" data-sub="Travel · Beijing, China">
+            <img src="assets/img157.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt and sunglasses sitting on a curved bench under a green tree with the CCTV Headquarters rising behind him in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>The Bench, CCTV Garden</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="The Bench — CCTV Garden, Wide View" data-sub="Travel · Beijing, China">
+            <img src="assets/img158.jpg" alt="Wide view of Tahsan Anindo in a white LI-NING t-shirt sitting on a curved bench in a garden plaza with the CCTV Headquarters behind him in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>The Bench, Wide View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="WWT Towers — Beijing CBD" data-sub="Travel · Beijing, China">
+            <img src="assets/img159.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt and sunglasses standing on a Beijing CBD sidewalk in front of the WWT towers with delivery scooters beside him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>WWT Towers, Beijing CBD</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="WWT Towers — Relaxed Pose" data-sub="Travel · Beijing, China">
+            <img src="assets/img160.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt with his hands in his pockets looking to the side on a Beijing CBD sidewalk with the WWT towers behind him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>WWT Towers, Relaxed Pose</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Among the Scooters — WWT Towers" data-sub="Travel · Beijing, China">
+            <img src="assets/img161.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt leaning among parked scooters on a Beijing street with the WWT towers and a golden evening sky behind him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Among the Scooters, WWT</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Golden Pillars — CBD Sidewalk" data-sub="Travel · Beijing, China">
+            <img src="assets/img162.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt with a crossbody bag standing on a Beijing CBD sidewalk beside golden pillars with the CCTV Headquarters in the distance" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Golden Pillars, CBD Sidewalk</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="CCTV View — The Railing Walk" data-sub="Travel · Beijing, China">
+            <img src="assets/img163.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt holding his bag strap on a paved walkway with the CCTV Headquarters framed behind him in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>CCTV View, Railing Walk</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Sky Bridge — Leaning on the Rail" data-sub="Travel · Beijing, China">
+            <img src="assets/img164.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt leaning on the railing of a glass sky bridge with the CCTV Headquarters behind the glass in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Sky Bridge, Beijing CBD</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Sky Bridge — Glass Towers, Beijing CBD" data-sub="Travel · Beijing, China">
+            <img src="assets/img165.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt with arms crossed on a glass sky bridge in front of the striped glass towers of Beijing CBD" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Sky Bridge, Beijing CBD</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Sky Bridge — China Zun View, Beijing CBD" data-sub="Travel · Beijing, China">
+            <img src="assets/img166.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt resting a hand on the railing of a Beijing CBD sky bridge with the China Zun CITIC Tower and glass towers behind him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>China Zun from the Sky Bridge</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Sky Bridge — CCTV Headquarters, Beijing CBD" data-sub="Travel · Beijing, China">
+            <img src="assets/img167.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt leaning on the glass railing of a sky bridge with the CCTV Headquarters rising behind him in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>CCTV Headquarters, Sky Bridge</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Sky Bridge — Leaning by the CCTV Tower, Beijing CBD" data-sub="Travel · Beijing, China">
+            <img src="assets/img168.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt leaning against the railing of a Beijing sky bridge with the CCTV Headquarters and the China Zun tower behind him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>By the CCTV Tower</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — The Red Bridge over the Lake, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img169.jpg" alt="Tahsan Anindo in an orange polo shirt leaning on the red railing of a bridge over Kunming Lake at the Summer Palace in Beijing, the Tower of Buddhist Incense on the hill behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Summer Palace, The Red Bridge</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — By the Red Railing, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img170.jpg" alt="Tahsan Anindo in an orange polo shirt holding his bag strap beside the weathered red railing of a lakeside bridge at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>By the Red Railing</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — Lakeside Bridge, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img171.jpg" alt="Tahsan Anindo in an orange polo shirt standing on a wooden bridge with a red and green railing over the lake at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Lakeside Bridge, Summer Palace</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — On the Rocks by the Lake, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img172.jpg" alt="Tahsan Anindo in an orange polo shirt with arms crossed standing on grey rocks at the edge of Kunming Lake under a weeping willow at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>On the Rocks, Summer Palace</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — Arms Open by Kunming Lake, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img173.jpg" alt="Tahsan Anindo in an orange polo shirt with arms open standing on rocks beside Kunming Lake at the Summer Palace in Beijing, paddle boats and the pagoda hill behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Arms Open by the Lake</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — Seated on the Rocks, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img174.jpg" alt="Tahsan Anindo in an orange polo shirt sitting on grey rocks at the shore of Kunming Lake under willow branches at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Seated on the Rocks</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — The Willow Bridge, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img175.jpg" alt="Tahsan Anindo in an orange polo shirt leaning on the red railing of a wooden bridge under weeping willows at the Summer Palace in Beijing, a traditional pavilion behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>The Willow Bridge</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — In Front of the Pavilion, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img176.jpg" alt="Tahsan Anindo in an orange polo shirt walking on a wooden bridge in front of a traditional Chinese pavilion at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>In Front of the Pavilion</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — Leaning on the Lakeside Rail, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img177.jpg" alt="Tahsan Anindo in an orange polo shirt leaning on a gold railing above Kunming Lake at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>The Lakeside Rail</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — Arms Crossed above the Lake, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img178.jpg" alt="Tahsan Anindo in an orange polo shirt with arms crossed leaning against a gold railing overlooking Kunming Lake at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Above the Lake</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — Looking over Kunming Lake, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img179.jpg" alt="Tahsan Anindo in an orange polo shirt resting a hand on the railing and looking over Kunming Lake and its willow-covered islands at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Looking over the Lake</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — By the Boat Dock, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img180.jpg" alt="Tahsan Anindo in an orange polo shirt with arms crossed by a railing above the boat dock on Kunming Lake at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>By the Boat Dock</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — The Pagoda Hill, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img181.jpg" alt="Tahsan Anindo in an orange polo shirt leaning on a railing at the Summer Palace in Beijing with tour boats below and the Tower of Buddhist Incense on Longevity Hill behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>The Pagoda Hill</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — Above the Tour Boats, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img182.jpg" alt="Tahsan Anindo in an orange polo shirt standing by a railing above the covered tour boats at the Summer Palace in Beijing, the pagoda hill rising behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Above the Tour Boats</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Summer Palace — The Stone Balustrade, Beijing" data-sub="Travel · Summer Palace, Beijing, China">
+            <img src="assets/img183.jpg" alt="Tahsan Anindo in an orange polo shirt holding a drink and leaning on a carved stone balustrade beside Kunming Lake at the Summer Palace in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>The Stone Balustrade</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Coffee Break — Starbucks, Beijing" data-sub="Travel · Beijing, China">
+            <img src="assets/img184.jpg" alt="Tahsan Anindo in an orange polo shirt and sunglasses holding a coffee cup in front of a Starbucks Coffee storefront in Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Coffee Break, Beijing</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Holding the Flag, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img185.jpg" alt="Tahsan Anindo in a teal t-shirt holding a small red Chinese flag on the Great Wall above misty green mountains near Beijing" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Holding the Flag, Great Wall</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — On the Crowded Wall, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img186.jpg" alt="Tahsan Anindo in a teal t-shirt standing on the stone walkway of the Great Wall among visitors, the wall climbing into the mist behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>On the Crowded Wall</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Arms Open on the Wall, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img187.jpg" alt="Tahsan Anindo in a teal t-shirt with arms open standing on the Great Wall among crowds, the parapets stretching into the fog" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Arms Open on the Wall</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Sunglasses on the Walkway, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img188.jpg" alt="Tahsan Anindo in a teal t-shirt and sunglasses standing on the Great Wall walkway with visitors passing on both sides" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Sunglasses on the Walkway</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Walking the Wall, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img189.jpg" alt="Tahsan Anindo in a teal t-shirt and sunglasses walking toward the camera on the Great Wall, green forested ridges behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Walking the Wall</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Arms Crossed by the Parapet, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img190.jpg" alt="Tahsan Anindo in a teal t-shirt with arms crossed leaning by the stone parapet of the Great Wall, the crowded wall rising into the mist" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>By the Parapet</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Kneeling by the Wall, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img191.jpg" alt="Tahsan Anindo in a teal t-shirt kneeling against the stone parapet of the Great Wall with the wall winding through misty green hills behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Kneeling by the Wall</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Hand on the Rail, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img192.jpg" alt="Tahsan Anindo in a teal t-shirt leaning forward with both hands on the metal handrail of the steep Great Wall steps" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Hand on the Rail</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Leaning on the Steps, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img193.jpg" alt="Tahsan Anindo in a teal t-shirt and sunglasses leaning on the handrail of the steep stone steps of the Great Wall" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Leaning on the Steps</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Against the Stone Parapet, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img194.jpg" alt="Tahsan Anindo in a teal t-shirt with arms crossed leaning back against the stone parapet on a quiet stretch of the Great Wall" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Against the Parapet</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Double Thumbs Up, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img195.jpg" alt="Tahsan Anindo in a teal t-shirt and sunglasses giving two thumbs up on the Great Wall with the wall snaking over green ridges behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Double Thumbs Up</b></span>
+          </button>
+          <button class="g-item bubble-host wide" data-folder="china" data-title="Great Wall — Arms Open above the Ridges, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img196.jpg" alt="Wide view of Tahsan Anindo in a teal t-shirt with arms open on the Great Wall, the wall winding over misty green mountain ridges behind him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Arms Open above the Ridges</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Close-Up on the Steps, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img197.jpg" alt="Close portrait of Tahsan Anindo in a teal t-shirt and sunglasses on the Great Wall steps with the wall descending through green hills behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Close-Up on the Steps</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Great Wall — Thumbs Up by the Parapet, Beijing" data-sub="Travel · Great Wall, Beijing, China">
+            <img src="assets/img198.jpg" alt="Tahsan Anindo in a teal t-shirt giving a thumbs up while leaning on the Great Wall parapet, forested ridges and the winding wall behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Thumbs Up by the Parapet</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Yingtian Gate Plaza at Night — Luoyang" data-sub="Travel · Luoyang, Henan, China">
+            <img src="assets/img199.jpg" alt="Tahsan Anindo in a white t-shirt standing on the patterned plaza in front of the golden illuminated Yingtian Gate complex in Luoyang at night" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Yingtian Gate Plaza, Luoyang</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="City Towers at Night — Zhengzhou" data-sub="Travel · Zhengzhou, Henan, China">
+            <img src="assets/img200.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt with arms crossed beside a black Tesla at dusk in Zhengzhou, rows of illuminated residential towers behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>City Towers, Zhengzhou</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="The Corn Tower — Ruyi Lake, Zhengzhou" data-sub="Travel · Zhengzhou, Henan, China">
+            <img src="assets/img201.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt leaning on a lakeside railing at night in Zhengzhou with the illuminated Corn Tower reflected in Ruyi Lake behind him" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Corn Tower, Ruyi Lake</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="At the Mountain Car Park — Baoquan, Henan" data-sub="Travel · Baoquan, Henan, China">
+            <img src="assets/img202.jpg" alt="Tahsan Anindo in a white t-shirt standing beside a black Tesla in a car park at Baoquan in Henan, green rocky cliffs rising behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Mountain Car Park, Baoquan</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="The Pavilion Bench — Baoquan, Henan" data-sub="Travel · Baoquan, Henan, China">
+            <img src="assets/img203.jpg" alt="Tahsan Anindo in a white t-shirt and sunglasses sitting on a wooden bench under a pavilion at Baoquan in Henan, green trees and cliffs behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Pavilion Bench, Baoquan</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Liziba Station — Chongqing" data-sub="Travel · Chongqing, China">
+            <img src="assets/img204.jpg" alt="Tahsan Anindo in a grey t-shirt making a peace sign on the illuminated plaza below Liziba station in Chongqing at night, the monorail track crossing the hillside buildings above" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Liziba Station, Chongqing</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Hongyadong — On the Riverside Railing, Chongqing" data-sub="Travel · Chongqing, China">
+            <img src="assets/img205.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt and teal shorts leaning on a wooden railing with the golden Hongyadong complex and the red Qiansimen Bridge behind him in Chongqing at night" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Hongyadong, Riverside Railing</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Hongyadong — On the Steps, Chongqing" data-sub="Travel · Chongqing, China">
+            <img src="assets/img206.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt and teal shorts standing on stone steps beside the illuminated Hongyadong complex in Chongqing at night" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Hongyadong, On the Steps</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Hongyadong — Street Level, Chongqing" data-sub="Travel · Chongqing, China">
+            <img src="assets/img207.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt and teal shorts standing on the street in front of the golden tiered Hongyadong complex in Chongqing at night" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Hongyadong, Street Level</b></span>
+          </button>
+          <button class="g-item bubble-host wide" data-folder="china" data-title="Qiansimen Bridge — Night River, Chongqing" data-sub="Travel · Chongqing, China">
+            <img src="assets/img208.jpg" alt="Tahsan Anindo in a white LI-NING t-shirt standing by a riverside railing in Chongqing at night with the illuminated Qiansimen Bridge and cruise boats on the river behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Qiansimen Bridge, Night River</b></span>
+          </button>
+          <button class="g-item bubble-host wide" data-folder="china" data-title="Dameisha Beach — Down the Shoreline, Shenzhen" data-sub="Travel · Dameisha Beach, Shenzhen, China">
+            <img src="assets/img209.jpg" alt="Wide view of Tahsan Anindo in a blue Adidas t-shirt standing at the water&#x27;s edge on Dameisha Beach in Shenzhen, waves rolling in and green headlands across the bay" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Dameisha Beach, The Shoreline</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Dameisha Beach — Arms Open in the Surf, Shenzhen" data-sub="Travel · Dameisha Beach, Shenzhen, China">
+            <img src="assets/img210.jpg" alt="Tahsan Anindo in a blue Adidas t-shirt with arms open standing barefoot in the surf on Dameisha Beach in Shenzhen" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Arms Open in the Surf</b></span>
+          </button>
+          <button class="g-item bubble-host wide" data-folder="china" data-title="Dameisha Beach — Resting on the Sand, Shenzhen" data-sub="Travel · Dameisha Beach, Shenzhen, China">
+            <img src="assets/img211.jpg" alt="Tahsan Anindo in a blue Adidas t-shirt lying on a pink towel on the sand at Dameisha Beach in Shenzhen, beachgoers and the bay behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Resting on the Sand</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="Between the Rocks — Dameisha, Shenzhen" data-sub="Travel · Dameisha, Shenzhen, China">
+            <img src="assets/img212.jpg" alt="Tahsan Anindo in a white polo shirt with arms crossed standing between pale rock formations at the sea&#x27;s edge at Dameisha in Shenzhen" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Between the Rocks, Dameisha</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="The Lakeside Railing — Dameisha, Shenzhen" data-sub="Travel · Dameisha, Shenzhen, China">
+            <img src="assets/img213.jpg" alt="Tahsan Anindo in a white polo shirt leaning on a railing beside a calm green lake at Dameisha in Shenzhen, hills and resort buildings behind" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Lakeside Railing, Dameisha</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="The Resort Front — Dameisha, Shenzhen" data-sub="Travel · Dameisha, Shenzhen, China">
+            <img src="assets/img214.jpg" alt="Tahsan Anindo in a white polo shirt leaning on a railing in front of a seaside resort hotel and a blue whale sculpture at Dameisha in Shenzhen" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>The Resort Front, Dameisha</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="china" data-title="The Marina Terrace — Dameisha, Shenzhen" data-sub="Travel · Dameisha, Shenzhen, China">
+            <img src="assets/img215.jpg" alt="Tahsan Anindo in a white polo shirt standing on a terrace overlooking a marina and green hills at Dameisha in Shenzhen" loading="lazy" />
+            <span class="g-cap"><span>China</span><b>Marina Terrace, Dameisha</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Grey Le Coq Tee — The Rooftop Café" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img006.jpg" alt="Tahsan Anindo in a grey Le Coq Sportif T-shirt and sunglasses at a rooftop café in Pattaya, Thailand" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Grey Le Coq Tee, The Rooftop Café</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Grey Le Coq Tee — Balcony Over the Bay" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img216.jpg" alt="Tahsan Anindo in a grey Le Coq Sportif T-shirt on a balcony overlooking Pattaya Bay" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Balcony Over the Bay</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Grey Le Coq Tee — A Table Under the Clouds" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img217.jpg" alt="Tahsan Anindo in a grey Le Coq Sportif T-shirt seated at a terrace table with the sea and a dramatic cloudy sky behind him in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>A Table Under the Clouds</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Grey Le Coq Tee — The King Power Plane" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img218.jpg" alt="Tahsan Anindo in a grey Le Coq Sportif T-shirt sitting beside the King Power aeroplane display outside Terminal 21 in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The King Power Plane</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Grey Le Coq Tee — Under the Cherry Blossom" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img219.jpg" alt="Tahsan Anindo in a grey Le Coq Sportif T-shirt sitting on a circular bench under a pink cherry blossom tree inside Terminal 21, Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Under the Cherry Blossom</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Grey Le Coq Tee — On the Escalator" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img220.jpg" alt="Tahsan Anindo in a grey Le Coq Sportif T-shirt riding an escalator inside a shopping mall in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>On the Escalator</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Grey Le Coq Tee — Terminal 21" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img221.jpg" alt="Tahsan Anindo in a grey Le Coq Sportif T-shirt at Terminal 21 shopping mall in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Terminal 21</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Grey Le Coq Tee — By the Pool" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img222.jpg" alt="Tahsan Anindo in a grey Le Coq Sportif T-shirt beside a resort pool in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>By the Pool</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Adidas Tee — The Eiffel Tower" data-sub="Travel · Mini Siam, Pattaya">
+            <img src="assets/img223.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt in front of the miniature Eiffel Tower at Mini Siam, Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Red Adidas Tee, The Eiffel Tower</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Adidas Tee — The Bridge" data-sub="Travel · Mini Siam, Pattaya">
+            <img src="assets/img224.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt beside a miniature bridge at Mini Siam, Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Bridge, Mini Siam</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Adidas Tee — St Basil's" data-sub="Travel · Mini Siam, Pattaya">
+            <img src="assets/img225.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt in front of the miniature St Basil's Cathedral at Mini Siam, Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>St Basil's, Mini Siam</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Adidas Tee — Mini Siam" data-sub="Travel · Mini Siam, Pattaya">
+            <img src="assets/img226.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt at Mini Siam miniature park in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Mini Siam</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Adidas Tee — The Temple" data-sub="Travel · Mini Siam, Pattaya">
+            <img src="assets/img227.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt in front of a miniature temple at Mini Siam, Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Temple, Mini Siam</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Adidas Tee — The Palace" data-sub="Travel · Mini Siam, Pattaya">
+            <img src="assets/img228.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt in front of a miniature palace at Mini Siam, Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Palace, Mini Siam</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Adidas Tee — Lady Liberty" data-sub="Travel · Mini Siam, Pattaya">
+            <img src="assets/img229.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt in front of the miniature Statue of Liberty at Mini Siam, Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Lady Liberty, Mini Siam</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="White Graphic Tee — The Golden Temples" data-sub="Travel · Mini Siam, Pattaya">
+            <img src="assets/img230.jpg" alt="Tahsan Anindo in a white graphic T-shirt and sunglasses standing among dark rocks, with golden temple spires behind him at Mini Siam, Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>White Graphic Tee, The Golden Temples</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="White Graphic Tee — Beside the Golden Temple" data-sub="Travel · Mini Siam, Pattaya">
+            <img src="assets/img231.jpg" alt="Tahsan Anindo in a white graphic T-shirt and sunglasses standing beside a golden temple at Mini Siam, Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>White Graphic Tee, Beside the Golden Temple</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Supreme Tee — The River Terrace" data-sub="Travel · Bangkok, Thailand">
+            <img src="assets/img232.jpg" alt="Tahsan Anindo in a red Supreme T-shirt holding his camera on a riverside terrace with the Chao Phraya River and the Bangkok skyline behind him" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Red Supreme Tee, The River Terrace</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Supreme Tee — Camera &amp; Phone" data-sub="Travel · Bangkok, Thailand">
+            <img src="assets/img233.jpg" alt="Tahsan Anindo in a red Supreme T-shirt holding his camera and red phone on a Bangkok rooftop with a glass tower behind him" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Camera &amp; Phone</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Supreme Tee — In the Garden" data-sub="Travel · Bangkok, Thailand">
+            <img src="assets/img234.jpg" alt="Tahsan Anindo in a red Supreme T-shirt holding his camera and red phone in a green garden in Bangkok" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>In the Garden</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Supreme Tee — In the Mall" data-sub="Travel · Bangkok, Thailand">
+            <img src="assets/img235.jpg" alt="Tahsan Anindo in a red Supreme T-shirt sitting in a Bangkok shopping mall holding his camera" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>In the Mall</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Supreme Tee — The Apple Store" data-sub="Travel · Bangkok, Thailand">
+            <img src="assets/img236.jpg" alt="Tahsan Anindo in a red Supreme T-shirt standing in front of the Apple Store glass facade at ICONSIAM, Bangkok" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Apple Store</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Supreme Tee — Mirror Selfie" data-sub="Travel · Bangkok, Thailand">
+            <img src="assets/img237.jpg" alt="Tahsan Anindo in a red Supreme T-shirt taking a mirror selfie with his Canon camera in a Bangkok store" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Mirror Selfie</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Red Supreme Tee — The Blue Lamborghini" data-sub="Travel · Bangkok, Thailand">
+            <img src="assets/img238.jpg" alt="Tahsan Anindo in a red Supreme T-shirt standing beside a blue Lamborghini on display in a Bangkok mall" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Blue Lamborghini</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Yellow Puma Tee — The Porsche 911" data-sub="Travel · Bangkok, Thailand">
+            <img src="assets/img239.jpg" alt="Tahsan Anindo in a yellow Puma T-shirt standing beside a grey Porsche 911 Carrera 4S in a Bangkok showroom" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Yellow Puma Tee, The Porsche 911</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Yellow Puma Tee — The BMW 320d GT" data-sub="Travel · Bangkok, Thailand">
+            <img src="assets/img240.jpg" alt="Tahsan Anindo in a yellow Puma T-shirt standing beside a black BMW 320d GT Luxury in a Bangkok mall showroom" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The BMW 320d GT</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="France Champion Tee — Balcony Over the Beach" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img241.jpg" alt="Tahsan Anindo in a white France Champion T-shirt standing on a hotel balcony overlooking Pattaya beach and the pool below" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>France Champion Tee, Balcony Over the Beach</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="France Champion Tee — The Hotel Stairs" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img242.jpg" alt="Tahsan Anindo in a white France Champion T-shirt standing on mosaic-tiled hotel stairs holding his camera in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Hotel Stairs</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="France Champion Tee — Poolside at the Hotel" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img243.jpg" alt="Tahsan Anindo in a white France Champion T-shirt sitting at the edge of the hotel pool with the resort towers behind him in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Poolside at the Hotel</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="France Champion Tee — Into the Pool" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img244.jpg" alt="Tahsan Anindo in a white France Champion T-shirt climbing into the resort pool in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Into the Pool</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="France Champion Tee — Pool &amp; Sea" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img245.jpg" alt="Tahsan Anindo in a white France Champion T-shirt standing in the pool with the sea behind him in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Pool &amp; Sea</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="France Champion Tee — Facing the Sea" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img246.jpg" alt="Tahsan Anindo in a white France Champion T-shirt standing before a green hedge with the sea behind him in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Facing the Sea</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="France Champion Tee — The Sea Terrace" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img247.jpg" alt="Tahsan Anindo in a white France Champion T-shirt sitting on a lounger on a terrace overlooking the sea in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Sea Terrace</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="France Champion Tee — The Pool Walk" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img248.jpg" alt="Tahsan Anindo in a white France Champion T-shirt walking beside the resort pool under palm trees in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Pool Walk</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="France Champion Tee — Down at the Beach" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img249.jpg" alt="Tahsan Anindo in a white France Champion T-shirt standing among beach greenery with the hotel behind him in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Down at the Beach</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Blue Raglan — Above Pattaya Beach" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img250.jpg" alt="Tahsan Anindo in a blue and black Tribord raglan shirt standing above Pattaya beach with the bay and hotels behind him" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Blue Raglan, Above Pattaya Beach</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Blue Raglan — On the Lounger, Feet Up" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img251.jpg" alt="Tahsan Anindo in a blue and black Tribord raglan shirt reclining on a sun lounger with his feet up in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>On the Lounger, Feet Up</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Blue Raglan — On the Lounger" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img252.jpg" alt="Tahsan Anindo in a blue and black Tribord raglan shirt relaxing on a sun lounger in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>On the Lounger</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Blue Raglan — Lounger &amp; Camera" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img253.jpg" alt="Tahsan Anindo in a blue and black Tribord raglan shirt sitting on a lounger holding his camera with the hotel behind him in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Lounger &amp; Camera</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Blue Raglan — The Pool Bridge" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img254.jpg" alt="Tahsan Anindo in a blue and black Tribord raglan shirt sitting on the wooden bridge over the resort pool in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Pool Bridge</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Blue Raglan — The Pool Steps" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img255.jpg" alt="Tahsan Anindo in a blue and black Tribord raglan shirt standing on the pool steps holding the rails at the Amari hotel pool in Pattaya" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Pool Steps</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="The Swim — Cap &amp; Goggles" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img256.jpg" alt="Tahsan Anindo floating in the resort pool in a green swim cap and goggles with Pattaya Bay behind him" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Swim, Cap &amp; Goggles</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Pattaya Bay" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img257.jpg" alt="Pattaya Bay and its curved sandy beach in Thailand" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Pattaya Bay</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="Clouds Over the Bay" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img258.jpg" alt="A sky full of white clouds over the sea in Thailand" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>Clouds Over the Bay</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="thailand" data-title="The Bay View — Pattaya" data-sub="Travel · Pattaya, Thailand">
+            <img src="assets/img259.jpg" alt="A wide view over Pattaya Bay in Thailand" loading="lazy" />
+            <span class="g-cap"><span>Thailand</span><b>The Bay View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Tee — The Wooden Door" data-sub="Travel · Vietnam">
+            <img src="assets/img008.jpg" alt="Tahsan Anindo in a yellow T-shirt and sunglasses in front of a carved wooden door in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Yellow Tee, The Wooden Door</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Tee — In the Park" data-sub="Travel · Vietnam">
+            <img src="assets/img260.jpg" alt="Tahsan Anindo in a yellow T-shirt in a green park in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Yellow Tee, In the Park</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Tee — Ha Long Bay" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img261.jpg" alt="Tahsan Anindo in a yellow T-shirt with the limestone islands of Ha Long Bay behind him" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Yellow Tee, Ha Long Bay</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Tee — The Bay View" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img262.jpg" alt="Tahsan Anindo in a yellow T-shirt looking out over Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Yellow Tee, The Bay View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Tee — Among the Rocks" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img263.jpg" alt="Tahsan Anindo in a yellow T-shirt among the limestone rocks of Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Yellow Tee, Among the Rocks</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Graphic Tee — On Deck" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img264.jpg" alt="Tahsan Anindo in a yellow graphic T-shirt seated on a boat deck with Ha Long harbour and its towers behind him" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Yellow Graphic Tee, On Deck</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Graphic Tee — Ha Long Harbour" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img265.jpg" alt="Tahsan Anindo in a yellow graphic T-shirt on a boat in Ha Long Bay with a limestone mountain behind him" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Yellow Graphic Tee, Ha Long Harbour</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Graphic Tee — The Sun Wheel" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img266.jpg" alt="Tahsan Anindo in a yellow graphic T-shirt on a boat deck with the Sun Wheel ferris wheel on the hill behind him in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>The Sun Wheel</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Graphic Tee — Lounging on Deck" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img267.jpg" alt="Tahsan Anindo in a yellow graphic T-shirt reclining on a sun lounger on a cruise deck in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Lounging on Deck</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Yellow Graphic Tee — Loungers for Two" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img268.jpg" alt="Tahsan Anindo in a yellow graphic T-shirt reclining on a deck lounger with the Sun Wheel ferris wheel across the harbour behind him in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Loungers for Two</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Black Tee — The Harbour Scooter" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img269.jpg" alt="Tahsan Anindo in a black T-shirt and cap sitting on a scooter by the harbour in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Black Tee, The Harbour Scooter</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Camera in Hand — Independence Palace" data-sub="Travel · Ho Chi Minh City, Vietnam">
+            <img src="assets/img270.jpg" alt="Tahsan Anindo in a black T-shirt photographing with his camera in front of the Independence Palace in Ho Chi Minh City" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Independence Palace, With Camera</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="At the Palace — Ho Chi Minh City" data-sub="Travel · Ho Chi Minh City, Vietnam">
+            <img src="assets/img271.jpg" alt="Tahsan Anindo in a black T-shirt at the Independence Palace in Ho Chi Minh City" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>At the Palace</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Blue Shirt — By the Pool" data-sub="Travel · Vietnam">
+            <img src="assets/img272.jpg" alt="Tahsan Anindo in a light blue shirt beside a resort pool in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Blue Shirt, By the Pool</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Blue Shirt — Poolside, Side View" data-sub="Travel · Vietnam">
+            <img src="assets/img273.jpg" alt="Tahsan Anindo in a light blue shirt beside a resort pool in Vietnam, side view" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Poolside, Side View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Blue Shirt — Poolside Portrait" data-sub="Travel · Vietnam">
+            <img src="assets/img274.jpg" alt="Tahsan Anindo in a light blue shirt standing in front of a resort pool in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Poolside Portrait</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Blue Shirt — The Cage Seat" data-sub="Travel · Vietnam">
+            <img src="assets/img275.jpg" alt="Tahsan Anindo in a light blue shirt seated inside a round black cage seat under a bright pink umbrella" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>The Cage Seat</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Blue Shirt — Villa Pool" data-sub="Travel · Vietnam">
+            <img src="assets/img276.jpg" alt="Tahsan Anindo in a light blue shirt by a villa pool in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Villa Pool</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Blue Shirt — The Gold BMW" data-sub="Travel · Vietnam">
+            <img src="assets/img277.jpg" alt="Tahsan Anindo in a light blue shirt beside a gold BMW in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>The Gold BMW</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Red Prada Tee — On the Boat" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img278.jpg" alt="Tahsan Anindo in a red Prada T-shirt on a boat in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Red Prada Tee, On the Boat</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Red Prada Tee — At the Farm" data-sub="Travel · Vietnam">
+            <img src="assets/img279.jpg" alt="Tahsan Anindo in a red Prada T-shirt at a farm in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Red Prada Tee, At the Farm</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Red Adidas Tee — On the Boat" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img280.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt on a boat in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Red Adidas Tee, On the Boat</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Red Adidas Tee — Boat, Side View" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img281.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt on a boat in Ha Long Bay, side view" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>On the Boat, Side View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Red Adidas Tee — At the Cave" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img282.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt at a cave in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>At the Cave</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Red Adidas Tee — On the Rocks" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img283.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt on the rocks at Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>On the Rocks</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Red Adidas Tee — Behind the Camera" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img284.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt holding his camera and taking a photo in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Behind the Camera</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Red Adidas Tee — Front Portrait" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img285.jpg" alt="Tahsan Anindo in a red and black Adidas T-shirt, front portrait in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Front Portrait</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Black Shirt — Cruise Deck" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img286.jpg" alt="Tahsan Anindo in a black long-sleeved shirt and sunglasses on a boat deck with a Ha Long Bay cruise ship behind him" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Black Shirt, Cruise Deck</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Black Shirt — Looking Over the Bay" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img287.jpg" alt="Tahsan Anindo in a black long-sleeved shirt in side profile, looking over Ha Long Bay with a cruise ship behind him" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Looking Over the Bay</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Black Shirt — Camera on Deck" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img288.jpg" alt="Tahsan Anindo in a black long-sleeved shirt holding his camera on a boat deck in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Camera on Deck</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Black Shirt — At the Railing" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img289.jpg" alt="Tahsan Anindo in a black long-sleeved shirt leaning on a boat railing in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>At the Railing</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Black Shirt — The Back View" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img290.jpg" alt="Tahsan Anindo in a black long-sleeved shirt seen from behind, taking in the view of Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>The Back View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Black Shirt — By the Cruise Ship" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img291.jpg" alt="Tahsan Anindo in a black long-sleeved shirt on deck with a cruise ship behind him in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>By the Cruise Ship</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Black Shirt — In Front of the Cruise" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img292.jpg" alt="Tahsan Anindo in a black long-sleeved shirt standing in front of a cruise ship in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>In Front of the Cruise</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Black Shirt — Cruise, Side View" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img293.jpg" alt="Tahsan Anindo in a black long-sleeved shirt in side profile with a cruise ship behind him in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Cruise, Side View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Grey Tee — The Balcony" data-sub="Travel · Vietnam">
+            <img src="assets/img294.jpg" alt="Tahsan Anindo in a grey T-shirt and sunglasses leaning on a balcony railing with palm trees and apartment buildings behind him in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Grey Tee, The Balcony</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Grey Shirt &amp; Cap — By the Sea" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img295.jpg" alt="Tahsan Anindo in a grey patterned shirt and black cap leaning on a railing above the sea in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Grey Shirt &amp; Cap, By the Sea</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Grey Shirt &amp; Cap — Sea View" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img296.jpg" alt="Tahsan Anindo in a grey patterned shirt and black cap by a railing with the sea and limestone islands behind him" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Sea View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Grey Shirt — Behind the Canon" data-sub="Travel · Vietnam">
+            <img src="assets/img297.jpg" alt="Tahsan Anindo in a grey patterned shirt and black cap holding his Canon camera up to his face" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Behind the Canon</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Grey Shirt &amp; Cap — Side Profile" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img298.jpg" alt="Tahsan Anindo in a grey patterned shirt and black cap in side profile, looking out over Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Side Profile</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Grey Shirt — Backpack by the Sea" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img299.jpg" alt="Tahsan Anindo in a grey patterned shirt with a backpack, standing by a railing above the sea in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Backpack by the Sea</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Blue Patterned Shirt — The Leaning Palm" data-sub="Travel · Vietnam">
+            <img src="assets/img300.jpg" alt="Tahsan Anindo in a blue patterned shirt standing beside a leaning palm tree on a sandy beach in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>The Leaning Palm, Beach</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="The Hotels — Vietnam" data-sub="Travel · Vietnam">
+            <img src="assets/img301.jpg" alt="Hotels and resort buildings in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>The Hotels</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Pink Flowers — Vietnam" data-sub="Travel · Vietnam">
+            <img src="assets/img302.jpg" alt="Pink flowers in bloom in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Pink Flowers</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Silk Lanterns — Vietnam" data-sub="Travel · Vietnam">
+            <img src="assets/img303.jpg" alt="Colourful silk lanterns hanging in Vietnam" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Silk Lanterns</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Ha Long Bay — Through the Vines" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img304.jpg" alt="Ha Long Bay seen through hanging green vines" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>Through the Vines</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="vietnam" data-title="Ha Long Bay — The Limestone Mountain" data-sub="Travel · Ha Long Bay, Vietnam">
+            <img src="assets/img305.jpg" alt="A limestone mountain rising from the water in Ha Long Bay" loading="lazy" />
+            <span class="g-cap"><span>Vietnam</span><b>The Limestone Mountain</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="indonesia" data-title="Black Tee — The Cliff View" data-sub="Travel · Bali, Indonesia">
+            <img src="assets/img007.jpg" alt="Tahsan Anindo in a black T-shirt leaning on a railing, looking out over green cliffs and the sea in Bali, Indonesia" loading="lazy" />
+            <span class="g-cap"><span>Indonesia</span><b>Black Tee, The Cliff View</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="indonesia" data-title="Navy Live Tee — The Cave" data-sub="Travel · Bali, Indonesia">
+            <img src="assets/img306.jpg" alt="Tahsan Anindo in a navy T-shirt reading LIVE A GOOD STORY and sunglasses, standing inside a rocky sea cave with water behind him in Bali, Indonesia" loading="lazy" />
+            <span class="g-cap"><span>Indonesia</span><b>Navy Live Tee, The Cave</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="singapore" data-title="Black Tee — The Merlion" data-sub="Travel · Singapore">
+            <img src="assets/img009.jpg" alt="Tahsan Anindo in a black T-shirt catching the Merlion's water spray in his mouth, with Marina Bay Sands behind him in Singapore" loading="lazy" />
+            <span class="g-cap"><span>Singapore</span><b>Black Tee, The Merlion</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="singapore" data-title="Black Feather Tee — The Marina Bay Railing" data-sub="Travel · Singapore">
+            <img src="assets/img307.jpg" alt="Tahsan Anindo in a black T-shirt with a red feather design, arms spread along a railing with Marina Bay Sands across the water behind him in Singapore" loading="lazy" />
+            <span class="g-cap"><span>Singapore</span><b>Black Feather Tee, The Marina Bay Railing</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="singapore" data-title="Black Feather Tee — Holding Up the Sands" data-sub="Travel · Singapore">
+            <img src="assets/img308.jpg" alt="Tahsan Anindo in a black T-shirt with a red feather design holding his hands above his head as if holding up Marina Bay Sands in Singapore" loading="lazy" />
+            <span class="g-cap"><span>Singapore</span><b>Holding Up the Sands</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="singapore" data-title="Black Feather Tee — The Merlion, Up Close" data-sub="Travel · Singapore">
+            <img src="assets/img309.jpg" alt="A close shot of Tahsan Anindo in a black T-shirt catching the Merlion's water spray in his mouth, with Marina Bay Sands behind him in Singapore" loading="lazy" />
+            <span class="g-cap"><span>Singapore</span><b>The Merlion, Up Close</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="malaysia" data-title="Petronas Twin Towers" data-sub="Travel · Kuala Lumpur, Malaysia">
+            <img src="assets/img010.jpg" alt="The Petronas Twin Towers rising into a cloudy sky in Kuala Lumpur, Malaysia" loading="lazy" />
+            <span class="g-cap"><span>Malaysia</span><b>Petronas Twin Towers</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="malaysia" data-title="The Golden Murugan — Batu Caves" data-sub="Travel · Batu Caves, Malaysia">
+            <img src="assets/img310.jpg" alt="The golden Murugan statue at the entrance to Batu Caves, Malaysia, with the steep staircase climbing the limestone hill beside it" loading="lazy" />
+            <span class="g-cap"><span>Malaysia</span><b>The Golden Murugan, Batu Caves</b></span>
+          </button>
+          <button class="g-item bubble-host" data-folder="malaysia" data-title="Red Tee — Batu Caves" data-sub="Travel · Batu Caves, Malaysia">
+            <img src="assets/img311.jpg" alt="Tahsan Anindo in a red T-shirt and denim shorts standing in front of the limestone cliffs at Batu Caves, Malaysia" loading="lazy" />
+            <span class="g-cap"><span>Malaysia</span><b>Red Tee, Batu Caves</b></span>
           </button>
         </div>
         </div>
@@ -1056,7 +2209,7 @@
         </div>
         <div class="about-grid reveal">
           <figure class="about-photo">
-            <img src="assets/img68.jpg" alt="Tahsan Anindo in a black suit and white shirt with arms crossed against warm golden lights — his signature portrait" />
+            <img src="assets/img047.jpg" alt="Tahsan Anindo in a black suit and white shirt with arms crossed against warm golden lights — his signature portrait" />
           </figure>
           <div class="about-txt">
             <p class="about-lead">Content with a cinematic eye — clean, honest and made to last.</p>
@@ -1074,14 +2227,14 @@
               <div class="about-travel">
                 <span class="about-travel-label">Travelled across the world</span>
                 <div class="flag-list">
-                  <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇹🇭</span>Thailand</span>
-                  <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇸🇬</span>Singapore</span>
-                  <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇲🇾</span>Malaysia</span>
-                  <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇮🇩</span>Indonesia</span>
-                  <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇻🇳</span>Vietnam</span>
-                  <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇦🇪</span>UAE</span>
-                  <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇸🇦</span>Saudi Arabia</span>
-                  <span class="flag-item bubble-host"><span class="flag" aria-hidden="true">🇨🇳</span>China</span>
+                  <button type="button" class="flag-item bubble-host" data-open-folder="thailand"><span class="flag" aria-hidden="true">🇹🇭</span>Thailand</button>
+                  <button type="button" class="flag-item bubble-host" data-open-folder="singapore"><span class="flag" aria-hidden="true">🇸🇬</span>Singapore</button>
+                  <button type="button" class="flag-item bubble-host" data-open-folder="malaysia"><span class="flag" aria-hidden="true">🇲🇾</span>Malaysia</button>
+                  <button type="button" class="flag-item bubble-host" data-open-folder="indonesia"><span class="flag" aria-hidden="true">🇮🇩</span>Indonesia</button>
+                  <button type="button" class="flag-item bubble-host" data-open-folder="vietnam"><span class="flag" aria-hidden="true">🇻🇳</span>Vietnam</button>
+                  <button type="button" class="flag-item bubble-host" data-open-folder="uae"><span class="flag" aria-hidden="true">🇦🇪</span>UAE</button>
+                  <button type="button" class="flag-item bubble-host" data-open-folder="saudi"><span class="flag" aria-hidden="true">🇸🇦</span>Saudi Arabia</button>
+                  <button type="button" class="flag-item bubble-host" data-open-folder="china"><span class="flag" aria-hidden="true">🇨🇳</span>China</button>
                 </div>
               </div>
             </div>
@@ -1286,40 +2439,135 @@
         var folderEmpty = document.getElementById('folderEmpty');
         var folderEmptyName = document.getElementById('folderEmptyName');
         items.forEach(function(it){ it.hidden = true; });
+
+        /* Nested folders — inside PR sit brand folders of their own (Skino,
+           Skino Part 2); each folder's photos live inside it, not loose in PR */
+        var prSubfolders = document.getElementById('prSubfolders');
+        var subViews = {
+          pr: document.getElementById('skinoView'),
+          pr2: document.getElementById('skino2View'),
+          eby: document.getElementById('ebyView')
+        };
+        function popIn(list){
+          if(reduceMotion) return;
+          list.forEach(function(it, i){
+            it.classList.remove('pop');
+            it.style.animationDelay = Math.min(i * 45, 400) + 'ms';
+            void it.offsetWidth;
+            it.classList.add('pop');
+          });
+        }
+        function setSubItemsVisible(key, on){
+          var list = [];
+          items.forEach(function(it){
+            if(it.getAttribute('data-folder') === key){
+              it.hidden = !on;
+              if(on) list.push(it);
+            }
+          });
+          document.querySelectorAll('.brand-section').forEach(function(s){
+            if(s.getAttribute('data-brand-folder') === key) s.hidden = !on;
+          });
+          return list;
+        }
+        function hideSubfolders(){
+          Object.keys(subViews).forEach(function(k){
+            if(subViews[k]) subViews[k].hidden = true;
+            setSubItemsVisible(k, false);
+          });
+        }
+        function openSubfolder(key){
+          hideSubfolders();
+          if(prSubfolders) prSubfolders.hidden = true;
+          if(subViews[key]) subViews[key].hidden = false;
+          var shownSub = setSubItemsVisible(key, true);
+          popIn(shownSub);
+          folderView.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'start' });
+        }
+        function backToPr(){
+          hideSubfolders();
+          if(prSubfolders) prSubfolders.hidden = false;
+          folderView.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'start' });
+        }
         function openFolder(key, name){
+          hideSubfolders();
+          if(prSubfolders) prSubfolders.hidden = key !== 'pr';
           var shown = [];
           items.forEach(function(it){
-            var show = it.getAttribute('data-folder') === key;
+            var show = key !== 'pr' && key !== 'pr2' && it.getAttribute('data-folder') === key;
             it.hidden = !show;
             if(show) shown.push(it);
           });
+          document.querySelectorAll('.brand-section').forEach(function(s){ s.hidden = true; });
           folderTitle.textContent = name;
-          folderCount.textContent = shown.length ? shown.length + (shown.length === 1 ? ' photo' : ' photos') : 'No photos yet';
-          folderEmpty.hidden = shown.length !== 0;
-          if(!shown.length) folderEmptyName.textContent = name;
+          if(key === 'pr'){
+            folderCount.textContent = '3 folders';
+            folderEmpty.hidden = true;
+          } else {
+            folderCount.textContent = shown.length ? shown.length + (shown.length === 1 ? ' photo' : ' photos') : 'No photos yet';
+            folderEmpty.hidden = shown.length !== 0;
+            if(!shown.length) folderEmptyName.textContent = name;
+          }
           folderGrid.hidden = true;
           folderView.hidden = false;
-          if(!reduceMotion){
-            shown.forEach(function(it, i){
-              it.classList.remove('pop');
-              it.style.animationDelay = Math.min(i * 45, 400) + 'ms';
-              void it.offsetWidth;
-              it.classList.add('pop');
-            });
-          }
+          popIn(shown);
           folderView.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'start' });
         }
         function closeFolder(){
+          document.querySelectorAll('.brand-section').forEach(function(s){
+            s.hidden = true;
+          });
+          Object.keys(subViews).forEach(function(k){
+            if(subViews[k]) subViews[k].hidden = true;
+          });
+          if(prSubfolders) prSubfolders.hidden = true;
+          items.forEach(function(it){
+            var f = it.getAttribute('data-folder');
+            if(f === 'pr' || f === 'pr2' || f === 'eby') it.hidden = true;
+          });
           folderView.hidden = true;
           folderGrid.hidden = false;
           folderGrid.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'start' });
         }
-        document.querySelectorAll('.folder-card').forEach(function(card){
+        document.querySelectorAll('#folderGrid .folder-card').forEach(function(card){
           card.addEventListener('click', function(){
             openFolder(card.getAttribute('data-folder'), card.getAttribute('data-name'));
           });
         });
         document.getElementById('folderBack').addEventListener('click', closeFolder);
+
+        /* Nav PR — opens the PR folder directly, like tapping its folder card */
+        var navPr = document.getElementById('navPr');
+        if(navPr) navPr.addEventListener('click', function(e){
+          e.preventDefault();
+          openFolder('pr', 'PR');
+        });
+
+        /* Countries Visited — tapping a country opens that country's folder
+           (an empty folder, e.g. Saudi Arabia, opens as its empty state) */
+        var folderNames = {
+          thailand:'Thailand', singapore:'Singapore', malaysia:'Malaysia',
+          indonesia:'Indonesia', vietnam:'Vietnam', uae:'Dubai, UAE',
+          saudi:'🇸🇦 Saudi Arabia', china:'China'
+        };
+        document.querySelectorAll('[data-open-folder]').forEach(function(el){
+          el.addEventListener('click', function(){
+            var key = el.getAttribute('data-open-folder');
+            openFolder(key, folderNames[key] || key);
+          });
+        });
+        var skinoCard = document.getElementById('skinoFolderCard');
+        if(skinoCard) skinoCard.addEventListener('click', function(){ openSubfolder('pr'); });
+        var skino2Card = document.getElementById('skino2FolderCard');
+        if(skino2Card) skino2Card.addEventListener('click', function(){ openSubfolder('pr2'); });
+        var skinoBackBtn = document.getElementById('skinoBack');
+        if(skinoBackBtn) skinoBackBtn.addEventListener('click', backToPr);
+        var skino2BackBtn = document.getElementById('skino2Back');
+        if(skino2BackBtn) skino2BackBtn.addEventListener('click', backToPr);
+        var ebyCard = document.getElementById('ebyFolderCard');
+        if(ebyCard) ebyCard.addEventListener('click', function(){ openSubfolder('eby'); });
+        var ebyBackBtn = document.getElementById('ebyBack');
+        if(ebyBackBtn) ebyBackBtn.addEventListener('click', backToPr);
 
         /* Gallery frames reveal one by one while scrolling / swiping through */
         if('IntersectionObserver' in window && !reduceMotion){
