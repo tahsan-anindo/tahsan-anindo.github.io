@@ -446,6 +446,7 @@
       .mail-fallback .mf-actions{ display:flex; gap:9px; flex-wrap:wrap; margin-top:14px; }
       .mail-fallback .mf-actions a, .mail-fallback .mf-actions button{ display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font:inherit; font-size:var(--fs-sm); font-weight:800; border-radius:999px; padding:9px 17px; min-height:42px; cursor:pointer; transition:transform .3s var(--ease-spring), background .25s, color .25s; }
       .mail-fallback .mf-actions a{ background:linear-gradient(135deg, var(--gold-light), var(--gold)); color:#191104; border:1px solid var(--gold-light); }
+      .mail-fallback .mf-actions a.mf-ghost{ background:rgba(5,10,30,.5); color:var(--ink); border:1px solid var(--line-gold); }
       .mail-fallback .mf-actions button{ background:rgba(5,10,30,.5); color:var(--ink); border:1px solid var(--line-gold); }
       .mail-fallback .mf-actions a:active, .mail-fallback .mf-actions button:active{ transform:scale(.95); }
       .mail-fallback .mf-close{ position:absolute; top:8px; right:8px; width:36px; height:36px; min-height:36px; border-radius:50%; border:1px solid var(--line-gold); background:rgba(5,10,30,.5); color:var(--ink); font-size:.95rem; cursor:pointer; }
@@ -653,7 +654,7 @@
         <h1 class="hero-name">Tahsan <span class="gold-name">Anindo</span></h1>
         <div class="hero-name-rule" aria-hidden="true"></div>
         <div class="role-highlight">
-          <a class="role-side bubble-host js-mail" href="mailto:tahsan.anindo@gmail.com" target="_blank" rel="noopener" aria-label="Email Tahsan Anindo — tahsan.anindo@gmail.com">
+          <a class="role-side bubble-host js-mail" href="mailto:tahsan.anindo@gmail.com" aria-label="Email Tahsan Anindo — tahsan.anindo@gmail.com">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>
           </a>
           <span class="role-words" id="roleWords" aria-label="Content Creator, Photographer, Luxury Lifestyle Creator">
@@ -2293,7 +2294,7 @@
         <div class="contact-links">
           <a class="bubble-host" href="https://www.instagram.com/tahsan.anindo" target="_blank" rel="noopener">Instagram <small>@tahsan.anindo</small></a>
           <a class="bubble-host" href="tel:+8801634084700"><span class="cl-label">Call<span class="wa-note">WhatsApp available too</span></span><small>+880 1634-084700</small></a>
-          <a class="bubble-host js-mail" href="mailto:tahsan.anindo@gmail.com" target="_blank" rel="noopener">Email <small>tahsan.anindo@gmail.com</small></a>
+          <a class="bubble-host js-mail" href="mailto:tahsan.anindo@gmail.com">Email <small>tahsan.anindo@gmail.com</small></a>
         </div>
       </div>
 
@@ -2333,6 +2334,7 @@
       <p>Email me at <span class="mf-addr">tahsan.anindo@gmail.com</span> — or open a ready-to-send message in Gmail instead.</p>
       <div class="mf-actions">
         <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=tahsan.anindo@gmail.com" target="_blank" rel="noopener">Open in Gmail</a>
+        <a class="js-mail mf-ghost" href="mailto:tahsan.anindo@gmail.com">Mail app</a>
         <button type="button" id="mailCopy">Copy email address</button>
       </div>
     </div>
@@ -2686,37 +2688,34 @@
           if(dx < 0){ current++; showCurrent('fwd'); } else { current--; showCurrent('back'); }
         }, { passive:true });
 
-        /* Email links — this page runs inside a framed in-app viewer, where a
-           plain mailto tap tries to navigate the frame itself and is silently
-           dropped (every other external link here already opens a new context
-           with target="_blank", which is why only email appeared dead). Open the
-           mailto as a new context from the tap itself; if no mail app takes
-           over within a moment, offer Gmail and a copy button instead. */
+        /* Email links — a mailto must stay a plain link: no target="_blank"
+           and no script interception. With target="_blank" the browser tries
+           to hand the mail app a new tab, which phone webviews and framed
+           in-app viewers silently drop, so the tap looked dead; routing the
+           tap through window.open() is popup-blocked in those viewers too,
+           and its blur suppressed the fallback panel below. So: let the
+           link navigate natively (mail app opens where one is available),
+           and if this page is still in front shortly after the tap, the
+           viewer swallowed the mailto — offer Gmail (a normal https link,
+           which works everywhere here) and a copy button instead. */
         var mailPanel = document.getElementById('mailFallback');
         var mailCopyBtn = document.getElementById('mailCopy');
         var mailCloseBtn = document.getElementById('mailClose');
-        var mailTimer = null, mailLeft = false;
+        var mailTimer = null;
         function hideMailPanel(){ if(mailPanel) mailPanel.classList.remove('show'); }
+        function cancelMailTimer(){ if(mailTimer){ clearTimeout(mailTimer); mailTimer = null; } }
         document.querySelectorAll('a.js-mail').forEach(function(link){
-          link.addEventListener('click', function(e){
-            e.preventDefault();
-            mailLeft = false;
-            var url = link.getAttribute('href');
-            var win = null;
-            try { win = window.open(url, '_blank'); } catch(err){ win = null; }
-            if(!win){
-              var tmp = document.createElement('a');
-              tmp.href = url; tmp.target = '_blank'; tmp.rel = 'noopener';
-              document.body.appendChild(tmp); tmp.click(); tmp.remove();
-            }
-            if(mailTimer) clearTimeout(mailTimer);
+          link.addEventListener('click', function(){
+            cancelMailTimer();
             mailTimer = setTimeout(function(){
-              if(!mailLeft && !document.hidden && mailPanel) mailPanel.classList.add('show');
-            }, 900);
+              mailTimer = null;
+              if(!document.hidden && mailPanel) mailPanel.classList.add('show');
+            }, 800);
           });
         });
-        window.addEventListener('blur', function(){ mailLeft = true; hideMailPanel(); });
-        document.addEventListener('visibilitychange', function(){ if(document.hidden){ mailLeft = true; hideMailPanel(); } });
+        /* The mail app (or another app) took over — no fallback needed. */
+        window.addEventListener('blur', function(){ cancelMailTimer(); hideMailPanel(); });
+        document.addEventListener('visibilitychange', function(){ if(document.hidden){ cancelMailTimer(); hideMailPanel(); } });
         if(mailCloseBtn) mailCloseBtn.addEventListener('click', hideMailPanel);
         if(mailCopyBtn) mailCopyBtn.addEventListener('click', function(){
           var addr = 'tahsan.anindo@gmail.com';
