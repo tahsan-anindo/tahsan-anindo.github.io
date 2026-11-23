@@ -435,7 +435,7 @@
       .contact-links a .wa-note{ font-size:var(--fs-xs); font-weight:600; color:var(--gold-light); letter-spacing:.02em; }
       .contact-links a:hover{ border-color:var(--gold); transform:translateX(4px); }
       .contact-links a:active{ transform:scale(.98); }
-      /* Mail fallback — appears only if the mail app did not open after a tap */
+      /* Email panel — opens in-page when an email button is tapped */
       .mail-fallback{ position:fixed; left:50%; bottom:18px; transform:translate(-50%,160%); z-index:95; width:min(520px, calc(100vw - 28px));
         background:linear-gradient(150deg, rgba(217,166,46,.14), rgba(43,92,230,.10)), var(--surface2); border:1px solid var(--gold); border-radius:var(--radius);
         box-shadow:0 24px 54px rgba(0,0,0,.6); padding:18px 20px; transition:transform .5s var(--ease-silk); }
@@ -2330,11 +2330,11 @@
 
     <div class="mail-fallback" id="mailFallback" role="dialog" aria-label="Email options">
       <button class="mf-close" id="mailClose" type="button" aria-label="Close email options">✕</button>
-      <b>Your mail app did not open?</b>
-      <p>Email me at <span class="mf-addr">tahsan.anindo@gmail.com</span> — or open a ready-to-send message in Gmail instead.</p>
+      <b>Email Tahsan Anindo</b>
+      <p>Write to <span class="mf-addr">tahsan.anindo@gmail.com</span> — open a ready-to-send message in Gmail, use your own mail app, or copy the address.</p>
       <div class="mf-actions">
         <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=tahsan.anindo@gmail.com" target="_blank" rel="noopener">Open in Gmail</a>
-        <a class="js-mail mf-ghost" href="mailto:tahsan.anindo@gmail.com">Mail app</a>
+        <a class="mf-ghost" href="mailto:tahsan.anindo@gmail.com">Mail app</a>
         <button type="button" id="mailCopy">Copy email address</button>
       </div>
     </div>
@@ -2688,34 +2688,29 @@
           if(dx < 0){ current++; showCurrent('fwd'); } else { current--; showCurrent('back'); }
         }, { passive:true });
 
-        /* Email links — a mailto must stay a plain link: no target="_blank"
-           and no script interception. With target="_blank" the browser tries
-           to hand the mail app a new tab, which phone webviews and framed
-           in-app viewers silently drop, so the tap looked dead; routing the
-           tap through window.open() is popup-blocked in those viewers too,
-           and its blur suppressed the fallback panel below. So: let the
-           link navigate natively (mail app opens where one is available),
-           and if this page is still in front shortly after the tap, the
-           viewer swallowed the mailto — offer Gmail (a normal https link,
-           which works everywhere here) and a copy button instead. */
+        /* Email links — tapping a bare mailto: inside a phone webview or a
+           framed in-app viewer does not open a mail app: the viewer hands
+           the tap to a new blank tab titled "Untitled" and strands the
+           visitor there (reported twice, after the target="_blank" fix and
+           after the plain-link fix). So the two main email buttons never
+           navigate to the mailto: address at all — the tap opens the panel
+           in-page instead, offering Gmail (a normal https compose link,
+           which works in every viewer), a "Mail app" mailto: link for
+           visitors who explicitly want their own app, and a copy button.
+           The mailto: href stays on the buttons themselves so the address
+           is still a real link for copy/long-press and crawlers. */
         var mailPanel = document.getElementById('mailFallback');
         var mailCopyBtn = document.getElementById('mailCopy');
         var mailCloseBtn = document.getElementById('mailClose');
-        var mailTimer = null;
         function hideMailPanel(){ if(mailPanel) mailPanel.classList.remove('show'); }
-        function cancelMailTimer(){ if(mailTimer){ clearTimeout(mailTimer); mailTimer = null; } }
         document.querySelectorAll('a.js-mail').forEach(function(link){
-          link.addEventListener('click', function(){
-            cancelMailTimer();
-            mailTimer = setTimeout(function(){
-              mailTimer = null;
-              if(!document.hidden && mailPanel) mailPanel.classList.add('show');
-            }, 800);
+          link.addEventListener('click', function(e){
+            e.preventDefault();
+            if(mailPanel) mailPanel.classList.add('show');
           });
         });
-        /* The mail app (or another app) took over — no fallback needed. */
-        window.addEventListener('blur', function(){ cancelMailTimer(); hideMailPanel(); });
-        document.addEventListener('visibilitychange', function(){ if(document.hidden){ cancelMailTimer(); hideMailPanel(); } });
+        /* Leaving the page (Gmail or the mail app took over) closes the panel. */
+        document.addEventListener('visibilitychange', function(){ if(document.hidden) hideMailPanel(); });
         if(mailCloseBtn) mailCloseBtn.addEventListener('click', hideMailPanel);
         if(mailCopyBtn) mailCopyBtn.addEventListener('click', function(){
           var addr = 'tahsan.anindo@gmail.com';
